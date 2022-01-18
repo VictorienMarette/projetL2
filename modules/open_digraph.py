@@ -10,6 +10,18 @@ class node:
         self.label = label
         self.parents = parents
         self.children = children
+    
+    def __eq__(self, p):
+        if self.id != p.id:
+            return False
+        if self.label != p.label:
+            raise Exception("Les Noeuds sont egaux mais n'ont pas le meme Label")
+        if self.parents != p.parents:
+            raise Exception("Les Noeuds sont egaux mais n'ont pas le meme dict parents")
+        if self.children != p.children:
+            raise Exception("Les Noeuds sont egaux mais n'ont pas le meme dict enfants")
+        return True
+
 
 class open_digraph: # for open directed graph
     def __init__(self, inputs, outputs, nodes):
