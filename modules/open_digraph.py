@@ -22,6 +22,15 @@ class node:
             raise Exception("Les Noeuds sont egaux mais n'ont pas le meme dict enfants")
         return True
 
+    def __str__(self):
+         return self.label + " " + str(self.id) + " " + str(self.children) + " " + str(self.parents)
+
+    def __repr__(self):
+        return str(self)
+
+    def copy(self):
+        return node(self.id, self.label, self.parents.copy(), self.children.copy())
+
 
 class open_digraph: # for open directed graph
     def __init__(self, inputs, outputs, nodes):
@@ -33,3 +42,19 @@ class open_digraph: # for open directed graph
         self.inputs = inputs
         self.outputs = outputs
         self.nodes = {node.id:node for node in nodes} # self.nodes: <int,node> dict
+
+    def __str__(self):
+        res = ""
+        for n in(self.nodes):
+            res += self.nodes[n].label + " "
+        return res
+    
+    def __repr__(self):
+        return str(self)
+
+    @classmethod
+    def empty():
+        return open_digraph([], [], [])
+
+    def copy(self):
+        return open_digraph(self.inputs.copy(), self.outputs.copy(), [n.copy() for n in self.nodes.values()])
