@@ -12,6 +12,7 @@ class node:
         self.children = children
     
     def __eq__(self, p):
+        '''surcharge de l'operateur d'egalite'''
         if self.id != p.id:
             return False
         if self.label != p.label:
@@ -23,33 +24,43 @@ class node:
         return True
 
     def get_id(self):
+        '''get the id of the node'''
         return self.id
     
     def get_label(self):
+        '''get the label of the node'''
         return self.label
     
     def get_parent_ids(self):
-        return self.parents
+        '''get the list of the parents id'''
+        return self.parents.keys()
 
     def get_children_ids(self):
-        return self.children
+        '''get the list of the children id'''
+        return self.children.khey()
 
     def set_id(self, i):
+        '''set the id of the node'''
         self.id = i
 
     def set_label(self, label):
+        '''set the label of the node'''
         self.label = label
 
     def set_parents_ids(self, parents):
+        '''set the parents ids'''
         self.parents = parents
 
     def set_children_ids(self, children):
+        '''set the children ids'''
         self.children = children
 
     def add_child_id(self, child):
+        '''add/update a child id'''
         self.children.update({child.id:child})
 
     def add_parent_id(self, parent):
+        '''add/update a parent id'''
         self.children.update({parent.id:parent})
 
     def __str__(self):
@@ -59,6 +70,7 @@ class node:
         return str(self)
 
     def copy(self):
+        '''return a copy of the node'''
         return node(self.id, self.label, self.parents.copy(), self.children.copy())
 
 
@@ -73,35 +85,50 @@ class open_digraph: # for open directed graph
         self.outputs = outputs
         self.nodes = {node.id:node for node in nodes} # self.nodes: <int,node> dict
 
+    #Pour les getter on renvoi des copies et non les pointeurs
     def get_input_ids(self):
-        return self.inputs
+        """get the input ids"""
+        return self.inputs.copy()
     
     def get_output_ids(self):
-        return self.outputs
+        """get the output ids"""
+        return self.outputs.copy()
 
     def get_id_node_map(self):
-        return self.node
+        """get the id:node dic"""
+        return self.node.copy()
 
     def get_nodes(self):
+        """get the nodes list"""
         return self.nodes.values()  
 
     def get_node_ids(self):
+        """get the nodes id list"""
         return self.nodes.keys()
 
     def get_node_by_id(self, id):
+        """get the node with the ID id"""
         return self.nodes[id]
 
+    def get_nodes_by_ids(self, idList):
+        """"get the nodes list with ID in idList"""
+        return [self.get_node_by_id(id) for id in idList]
+
     def set_input_ids(self, inputs):
+        """set the inputs list"""
         self.inputs = inputs
 
-    def add_input_id(self, input):
-        self.inputs.append(input)
+    def add_input_id(self, id):
+        """add an id to the input list"""
+        self.inputs.append(id)
 
     def set_output_ids(self, outputs):
+        """set the outputs list"""
         self.outputs = outputs
 
-    def add_output_id(self, output):
-        self.outputs.append(output)
+    def add_output_id(self, id):
+        """add an id to the outputs list"""
+        self.outputs.append(id)
 
     def __str__(self):
         res = ""
@@ -114,7 +141,9 @@ class open_digraph: # for open directed graph
 
     @classmethod
     def empty():
+        """return an empty graph"""
         return open_digraph([], [], [])
 
     def copy(self):
+        """return a copy of the graph"""
         return open_digraph(self.inputs.copy(), self.outputs.copy(), [n.copy() for n in self.nodes.values()])
