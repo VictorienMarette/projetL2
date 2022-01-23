@@ -26,15 +26,23 @@ class InitTest(unittest.TestCase):
 class NodeTest(unittest.TestCase):
     def setUp(self):
         self.n0 = node(0, 'a', [], [1])
+        self.n = node(0, 'a', [], [1])
+        self.nn = node(1, 'j', {0:2}, {})
+        self.ni = node(0, 'i', {},  {3: 2})
+        self.nj = node(2, 'j', {0: 2}, {1: 1})
+        self.nk = node(1, 'k', {2:1}, {})
     def test_get_id(self):
         self.assertEqual(self.n0.get_id(), 0)
     def test_get_label(self):
         self.assertEqual(self.n0.get_label(), 'a')
     def test_copy(self):
-        n = node(0, 'a', [], [1])
-        nn = node(1, 'j', {0:2}, {})
-        self.assertIsNot(n.copy(), n)
-        self.assertIsNot(nn.copy(), nn)
+        self.assertIsNot(self.n.copy(), self.n)
+        self.assertIsNot(self.nn.copy(), self.nn)
+    def test_isDirectParentsChildren(self):
+        self.assertTrue(self.nj.isDirectChild(0))
+        self.assertTrue(self.nj.isDirectParent(1))
+        self.assertFalse(self.nk.isDirectChild(0))
+        
 
     # Les getters et setters sont assez simples pour
     # ne pas avoir a les tester
@@ -66,6 +74,17 @@ class OpenDigraphTest(unittest.TestCase):
     def test_NewId(self):
         self.assertIsNot(self.d0.new_id(), 0)
         self.assertIsNot(self.d0.new_id(), 1)
+
+    def test_add_edge(self):
+        self.d0.add_edge(0, 1)
+        self.assertEqual(self.d0.get_node_by_id(0), node(0, 'i', {}, {1:3}))
+        self.assertEqual(self.d0.get_node_by_id(1), node(1, 'j', {0:3}, {}))
+        self.d0 = open_digraph([0], [2], [node(0, 'i', {}, {1:2}), node(1, 'j', {0:2}, {2:1}), node(2, 'k', {1:1}, {})])
+        self.d0.add_edge(0, 2)
+        self.assertEqual(self.d0.get_node_by_id(0), node(0, 'i', {}, {1:2, 2:1}))
+        self.assertEqual(self.d0.get_node_by_id(2), node(2, 'k', {1:1, 0:1}, {}))
+        self.d0 = open_digraph([0], [1], [node(0, 'i', {}, {1:2}), node(1, 'j', {0:2}, {})])
+
 
 
 if __name__ == '__main__': # the following code is called only when

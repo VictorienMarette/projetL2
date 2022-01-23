@@ -55,13 +55,26 @@ class node:
         '''set the children ids'''
         self.children = children
 
-    def add_child_id(self, child):
-        '''add/update a child id'''
-        self.children.update({child.id:child})
+    def add_child_id(self, id):
+        '''add/update a child id
+        Node id has to be a new child for self'''
+        self.children.update({id:1})
 
-    def add_parent_id(self, parent):
-        '''add/update a parent id'''
-        self.children.update({parent.id:parent})
+    def add_parent_id(self, id):
+        '''add/update a parent id
+        Node id has to be a new parent for self'''
+        self.parents.update({id:1})
+
+
+    # methodes
+
+    def isDirectParent(self, id):
+        '''check if node id is a direct child from self'''
+        return id in self.children
+
+    def isDirectChild(self, id):
+        '''check if node id is a direct parent from self'''
+        return id in self.parents
 
     def __str__(self):
          return self.label + " " + str(self.id) + " " + str(self.parents) + " " + str(self.children)
@@ -156,7 +169,14 @@ class open_digraph: # for open directed graph
             raise Exception("Les id passes en argument ne correspondent a aucun noeud")
         srcNode = self.get_node_by_id(src)
         tgtNode = self.get_node_by_id(tgt)
-        # Pas fini
+        if(srcNode.isDirectParent(tgt)):
+            tgtNode.parents[src] += 1
+            srcNode.children[tgt] += 1
+        else:
+            srcNode.add_child_id(tgt)
+            tgtNode.add_parent_id(src)
+
+
 
     def copy(self):
         '''return a copy of the graph'''
