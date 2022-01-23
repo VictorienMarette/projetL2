@@ -1,11 +1,15 @@
 from modules.open_digraph import *
+import inspect
 
 #TD1
-
-#Exercice 4
 
 myGraph = open_digraph([0], [2], [node(0, 'i0', {}, {2:1}), node(2, 's', {0:1}, {})])
 # print(myGraph) il ne se passe rien
 n = node(0, 'i0', {}, {2:1})
 
-print(myGraph)
+# print(myGraph)
+# print(dir(open_digraph))
+# print(dir(node))
+print(myGraph.get_nodes())
+
+print("Je deteste python")

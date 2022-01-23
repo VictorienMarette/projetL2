@@ -15,11 +15,12 @@ class InitTest(unittest.TestCase):
         self.assertIsInstance(n0, node)
 
     def test_init_open_digraph(self):
-        d0 = open_digraph([2, 3, 1], [4, 9, 0], [node(0, 'i', {}, {1:2}), node(1, 'j', {0:2}, {})])
-        self.assertEqual(d0.inputs, [2, 3, 1])
-        self.assertEqual(d0.outputs, [4, 9, 0])
+        d0 = open_digraph([0], [1], [node(0, 'i', {}, {1:2}), node(1, 'j', {0:2}, {})])
+        self.assertEqual(d0.inputs, [0])
+        self.assertEqual(d0.outputs, [1])
         self.assertEqual(d0.nodes, {0: node(0, 'i', {}, {1:2}), 1: node(1, 'j', {0:2}, {})})
         self.assertIsInstance(d0, open_digraph)
+        self.assertEqual(d0.sortedListOfId, [0, 1])
 
 
 class NodeTest(unittest.TestCase):
@@ -35,19 +36,36 @@ class NodeTest(unittest.TestCase):
         self.assertIsNot(n.copy(), n)
         self.assertIsNot(nn.copy(), nn)
 
+    # Les getters et setters sont assez simples pour
+    # ne pas avoir a les tester
+
 
 class OpenDigraphTest(unittest.TestCase):
     def setUp(self):
-        self.d0 = open_digraph([2, 3, 1], [4, 9, 0], [node(0, 'i', {}, {1:2}), node(1, 'j', {0:2}, {})])
+        self.d0 = open_digraph([0], [1], [node(0, 'i', {}, {1:2}), node(1, 'j', {0:2}, {})])
+
+    # Tests des getters
     def test_get_inputs(self):
-        self.assertEqual(self.d0.inputs, [2, 3, 1],)
+        self.assertEqual(self.d0.get_input_ids(), [0])
     def test_get_outputs(self):
-        self.assertEqual(self.d0.outputs, [4, 9, 0])
-        
+        self.assertEqual(self.d0.get_output_ids(), [1])
+    def test_get_node_map(self):
+        self.assertEqual(self.d0.get_id_node_map()[0], node(0, 'i', {}, {1:2}))
+        self.assertEqual(self.d0.get_id_node_map()[1], node(1, 'j', {0:2}, {}) )
+    def test_get_nodes(self):
+        self.assertEqual(list(self.d0.get_nodes()), [node(0, 'i', {}, {1:2}), node(1, 'j', {0:2}, {})])
+    def test_get_node_ids(self):
+        self.assertEqual(self.d0.get_node_ids(), [0, 1])
+    def test_get_node_by_id(self):
+        self.assertEqual(self.d0.get_node_by_id(1), node(1, 'j', {0:2}, {}))
         
     def test_copy(self):
         d = open_digraph([0], [2], [node(0, 'i0', {}, {2:1}), node(2, 's', {0:1}, {})])
         self.assertIsNot(d.copy(), d)
+
+    def test_NewId(self):
+        self.assertIsNot(self.d0.new_id(), 0)
+        self.assertIsNot(self.d0.new_id(), 1)
 
 
 if __name__ == '__main__': # the following code is called only when

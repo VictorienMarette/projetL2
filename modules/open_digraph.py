@@ -64,7 +64,7 @@ class node:
         self.children.update({parent.id:parent})
 
     def __str__(self):
-         return self.label + " " + str(self.id) + " " + str(self.children) + " " + str(self.parents)
+         return self.label + " " + str(self.id) + " " + str(self.parents) + " " + str(self.children)
 
     def __repr__(self):
         return str(self)
@@ -84,50 +84,52 @@ class open_digraph: # for open directed graph
         self.inputs = inputs
         self.outputs = outputs
         self.nodes = {node.id:node for node in nodes} # self.nodes: <int,node> dict
+        self.sortedListOfId = sorted(self.nodes.keys()) # on garde toujours une liste triee
+                                                        # des ID pour ne pas avoir a la recalculer a chaque fois
 
     #Pour les getter on renvoi des copies et non les pointeurs
     def get_input_ids(self):
-        """get the input ids"""
-        return self.inputs.copy()
+        '''get the input ids'''
+        return self.inputs
     
     def get_output_ids(self):
-        """get the output ids"""
-        return self.outputs.copy()
+        '''get the output ids'''
+        return self.outputs
 
     def get_id_node_map(self):
-        """get the id:node dic"""
-        return self.node.copy()
+        '''get the id:node dic'''
+        return self.nodes
 
     def get_nodes(self):
-        """get the nodes list"""
+        '''get the nodes list'''
         return self.nodes.values()  
 
     def get_node_ids(self):
-        """get the nodes id list"""
-        return self.nodes.keys()
+        '''get the nodes id list'''
+        return self.sortedListOfId
 
     def get_node_by_id(self, id):
-        """get the node with the ID id"""
+        '''get the node with the ID id'''
         return self.nodes[id]
 
     def get_nodes_by_ids(self, idList):
-        """"get the nodes list with ID in idList"""
+        '''get the nodes list with ID in idList'''
         return [self.get_node_by_id(id) for id in idList]
 
     def set_input_ids(self, inputs):
-        """set the inputs list"""
+        '''set the inputs list'''
         self.inputs = inputs
 
     def add_input_id(self, id):
-        """add an id to the input list"""
+        '''add an id to the input list'''
         self.inputs.append(id)
 
     def set_output_ids(self, outputs):
-        """set the outputs list"""
+        '''set the outputs list'''
         self.outputs = outputs
 
     def add_output_id(self, id):
-        """add an id to the outputs list"""
+        '''add an id to the outputs list'''
         self.outputs.append(id)
 
     def __str__(self):
@@ -141,9 +143,21 @@ class open_digraph: # for open directed graph
 
     @classmethod
     def empty():
-        """return an empty graph"""
+        '''return an empty graph'''
         return open_digraph([], [], [])
 
+    def new_id(self):
+        '''return a new id for the graph'''
+        return self.sortedListOfId[-1] + 1
+
+    def add_edge(self, src, tgt):
+        '''add a link from node with id src to node with id tgt'''
+        if src not in self.sortedListOfId or tgt not in self.sortedListOfId:
+            raise Exception("Les id passes en argument ne correspondent a aucun noeud")
+        srcNode = self.get_node_by_id(src)
+        tgtNode = self.get_node_by_id(tgt)
+        # Pas fini
+
     def copy(self):
-        """return a copy of the graph"""
+        '''return a copy of the graph'''
         return open_digraph(self.inputs.copy(), self.outputs.copy(), [n.copy() for n in self.nodes.values()])
