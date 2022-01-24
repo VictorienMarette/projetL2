@@ -169,12 +169,20 @@ class open_digraph: # for open directed graph
             raise Exception("Les id passes en argument ne correspondent a aucun noeud")
         srcNode = self.get_node_by_id(src)
         tgtNode = self.get_node_by_id(tgt)
-        if(srcNode.isDirectParent(tgt)):
+        if(srcNode.isDirectParent(tgt)): # Si un lien existe deja
             tgtNode.parents[src] += 1
             srcNode.children[tgt] += 1
-        else:
+        else: # Si le lien n'existe pas
             srcNode.add_child_id(tgt)
             tgtNode.add_parent_id(src)
+
+    def add_node(self, parents, children, label=''): # Attention pas meme signature que dans le sujet (pb)
+        newId = self.newId() # On choisit un nouvel id
+        self.sortedListOfId.append(newId) # On ajoute le nouvel id a la banque d'id
+        newNode = node(newId, label, parents, children)
+        self.nodes.update({newId:newNode}) # On ajoute le nouveau noeud au graph
+
+        # Mise a jour des autres noeuds, demander au prof
 
 
 
