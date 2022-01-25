@@ -83,7 +83,16 @@ class OpenDigraphTest(unittest.TestCase):
         self.d0.add_edge(0, 2)
         self.assertEqual(self.d0.get_node_by_id(0), node(0, 'i', {}, {1:2, 2:1}))
         self.assertEqual(self.d0.get_node_by_id(2), node(2, 'k', {1:1, 0:1}, {}))
-        self.d0 = open_digraph([0], [1], [node(0, 'i', {}, {1:2}), node(1, 'j', {0:2}, {})])
+
+    def test_add_node(self):
+        self.d0.add_node('new', {}, {0:2})
+        self.assertEqual(self.d0.inputs, [2])
+        self.assertEqual(self.d0.get_node_by_id(2), node(2, 'new', {}, {0:2}))
+        self.assertEqual(self.d0.get_node_by_id(0), node(0, 'i', {2:2}, {1:2}))
+        self.d0.add_node('new2', {1:7}, {})
+        self.assertEqual(self.d0.outputs, [3])
+        self.assertEqual(self.d0.get_node_by_id(3), node(3, 'new2', {1:7}, {}))
+        self.assertEqual(self.d0.get_node_by_id(1), node(1, 'j', {0:2}, {3:7}))
 
 
 
