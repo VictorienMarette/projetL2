@@ -210,6 +210,30 @@ class open_digraph: # for open directed graph
             childNode.add_parent_id(newId)
             childNode.parents[newId] = children[idChildren]
 
+    #A FINIR ET TESTER
+    def is_well_formed(self):
+        '''
+        Check if the graph is well formed.
+        Les conditions sur un graph pour etre correct sont decrites dans le sujet du TP2
+        '''
+
+        for idInNode in self.inputs:
+            # Condition 1
+            if not idInNode in self.nodes:
+                return False
+            # Condtion 2
+            node = self.get_node_by_id(idInNode)
+            if len(node.children) != 1 or node.parents != {}:
+                return False
+            for id in node.children:
+                if node.children[id] != 1:
+                    return False
+            
+        for idOutNode in self.outputs:
+            # Condition 3
+            if not idOutNode in self.nodes:
+                return False
+
 
 
     def copy(self):

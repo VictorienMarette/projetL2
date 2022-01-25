@@ -50,6 +50,7 @@ class NodeTest(unittest.TestCase):
 
 class OpenDigraphTest(unittest.TestCase):
     def setUp(self):
+        # Noeud mal forme qu'on garde pour les tests
         self.d0 = open_digraph([0], [1], [node(0, 'i', {}, {1:2}), node(1, 'j', {0:2}, {})])
 
     # Tests des getters
