@@ -42,7 +42,19 @@ class NodeTest(unittest.TestCase):
         self.assertTrue(self.nj.isDirectChild(0))
         self.assertTrue(self.nj.isDirectParent(1))
         self.assertFalse(self.nk.isDirectChild(0))
-        
+    def test_remove_parent_once_child_once_parent_id_child_id(self):
+        self.nj.remove_parent_once(0)
+        self.ni.remove_child_once(3)
+        self.nk.remove_child_id(2)
+        self.nj.remove_child_id(1)
+        self.nj.remove_child_id(2)
+        self.assertTrue(self.nj.parents == {0:1})
+        self.assertTrue(self.ni.children == {3:1})
+        self.assertTrue(self.nk.children == {})
+        self.assertTrue(self.nj.children == {})
+        self.nj.remove_parent_once(0)
+        self.assertTrue(self.nj.parents == {})
+
 
     # Les getters et setters sont assez simples pour
     # ne pas avoir a les tester
@@ -84,6 +96,17 @@ class OpenDigraphTest(unittest.TestCase):
         self.assertEqual(self.d0.get_node_by_id(0), node(0, 'i', {}, {1:2, 2:1}))
         self.assertEqual(self.d0.get_node_by_id(2), node(2, 'k', {1:1, 0:1}, {}))
         self.d0 = open_digraph([0], [1], [node(0, 'i', {}, {1:2}), node(1, 'j', {0:2}, {})])
+
+    def test_remove_edge(self):
+        self.d0.remove_edge(0,1)
+        self.assertTrue(self.d0.get_node_by_id(0).children == {1:1})
+        self.assertTrue(self.d0.get_node_by_id(1).parents == {0:1})
+        self.d0.remove_edge(0,1)
+        self.assertTrue(self.d0.get_node_by_id(0).children == {})
+        self.assertTrue(self.d0.get_node_by_id(1).parents == {})
+        self.assertTrue(self.d0.get_input_ids() == [0,1])
+        self.assertTrue(self.d0.get_output_ids() == [1,0])
+        
 
 
 

@@ -33,11 +33,11 @@ class node:
     
     def get_parent_ids(self):
         '''get the list of the parents id'''
-        return self.parents.keys()
+        return list(self.parents.keys())
 
     def get_children_ids(self):
         '''get the list of the children id'''
-        return self.children.khey()
+        return list(self.children.keys())
 
     def set_id(self, i):
         '''set the id of the node'''
@@ -64,9 +64,30 @@ class node:
         '''add/update a parent id
         Node id has to be a new parent for self'''
         self.parents.update({id:1})
+    
+    def remove_parent_once(self, id):
+        '''remove a link to the parent with id'''
+        if self.isDirectChild(id):
+            self.parents[id] = self.parents[id] - 1
+            if  self.parents[id] <= 0:
+                del self.parents[id]
 
+    def remove_child_once(self, id):
+        '''remove a link to the children with id'''
+        if self.isDirectParent(id):
+            self.children[id] = self.children[id] - 1
+            if  self.children[id] <= 0:
+                del self.children[id]
 
-    # methodes
+    def remove_parent_id (self, id):
+        '''remove all link to the parent with id'''
+        if self.isDirectChild(id):
+            del self.parents[id]
+
+    def remove_child_id (self, id):
+        '''remove all link to the children with id'''
+        if self.isDirectParent(id):
+            del self.children[id]
 
     def isDirectParent(self, id):
         '''check if node id is a direct child from self'''
@@ -184,6 +205,14 @@ class open_digraph: # for open directed graph
 
         # Mise a jour des autres noeuds, demander au prof
 
+    def remove_edge(self, src, tgt):
+        '''remove one edge from src to tgt'''
+        self.get_node_by_id(src).remove_child_once(tgt)
+        if self.get_node_by_id(src).get_children_ids() == [] and not src in self.get_output_ids():
+            self.get_output_ids().append(src)
+        self.get_node_by_id(tgt).remove_parent_once(src)
+        if self.get_node_by_id(tgt).get_parent_ids() == [] and not tgt in self.get_input_ids():
+            self.inputs.append(tgt)
 
 
     def copy(self):
