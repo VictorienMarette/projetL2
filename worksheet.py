@@ -13,3 +13,7 @@ n = node(0, 'i0', {}, {2:1})
 print(myGraph.get_nodes())
 
 print("Je deteste python")
+
+d0 = open_digraph([0], [1], [node(0, 'i', {}, {1:2}), node(1, 'j', {0:2}, {})])
+d0.add_node('new', {}, {0:2})
+print(d0)

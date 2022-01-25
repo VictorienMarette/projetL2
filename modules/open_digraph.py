@@ -121,7 +121,6 @@ class open_digraph: # for open directed graph
         self.sortedListOfId = sorted(self.nodes.keys()) # on garde toujours une liste triee
                                                         # des ID pour ne pas avoir a la recalculer a chaque fois
 
-    #Pour les getter on renvoi des copies et non les pointeurs
     def get_input_ids(self):
         '''get the input ids'''
         return self.inputs
@@ -197,13 +196,40 @@ class open_digraph: # for open directed graph
             srcNode.add_child_id(tgt)
             tgtNode.add_parent_id(src)
 
-    def add_node(self, parents, children, label=''): # Attention pas meme signature que dans le sujet (pb)
-        newId = self.newId() # On choisit un nouvel id
+    def add_node(self, label='', parents={}, children={}): # Attention pas meme signature que dans le sujet (pb)
+        '''
+        Add a new node to the graph
+        label : label for the new node
+        parents : int->int dict; map the new node's parents id to their multiplicity
+        childrens : int->int dict; map the new node's children id to their multiplicity
+        '''
+        newId = self.new_id() # On choisit un nouvel id
         self.sortedListOfId.append(newId) # On ajoute le nouvel id a la banque d'id
         newNode = node(newId, label, parents, children)
         self.nodes.update({newId:newNode}) # On ajoute le nouveau noeud au graph
 
-        # Mise a jour des autres noeuds, demander au prof
+        # Mise a jour des autres noeuds
+        if parents == {}:
+            self.inputs.append(newId)
+            for idChildren in children:
+                if idChildren in self.inputs:
+                    self.inputs.remove(idChildren)
+        if children == {}:
+            self.outputs.append(newId)
+            for idParent in parents:
+                if idParent in self.outputs:
+                    self.outputs.remove(idParent)
+        for idParent in parents:
+            # Ajout dans les parents
+            parentNode = self.get_node_by_id(idParent)
+            parentNode.add_child_id(newId)
+            parentNode.children[newId] = parents[idParent]
+
+        for idChildren in children:
+            # Ajout dans les enfants
+            childNode = self.get_node_by_id(idChildren)
+            childNode.add_parent_id(newId)
+            childNode.parents[newId] = children[idChildren]
 
     def remove_edge(self, src, tgt):
         '''remove one edge from src to tgt'''
