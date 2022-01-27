@@ -20,7 +20,7 @@ class InitTest(unittest.TestCase):
         self.assertEqual(d0.outputs, [1])
         self.assertEqual(d0.nodes, {0: node(0, 'i', {}, {1:2}), 1: node(1, 'j', {0:2}, {})})
         self.assertIsInstance(d0, open_digraph)
-        self.assertEqual(d0.sortedListOfId, [0, 1])
+        self.assertEqual(d0.lastNewId, 1)
 
 
 class NodeTest(unittest.TestCase):
@@ -64,6 +64,10 @@ class OpenDigraphTest(unittest.TestCase):
     def setUp(self):
         # Noeud mal forme qu'on garde pour les tests
         self.d0 = open_digraph([0], [1], [node(0, 'i', {}, {1:2}), node(1, 'j', {0:2}, {})])
+        self.d1 = open_digraph([0], [2], [
+            node(0, 'i', {}, {1:1}), 
+            node(1, 'j', {0:1}, {2:3}), 
+            node(2, 'k', {1:3}, {})])
 
     # Tests des getters
     def test_get_inputs(self):
@@ -109,13 +113,21 @@ class OpenDigraphTest(unittest.TestCase):
 
     def test_remove_edge(self):
         self.d0.remove_edge(0,1)
-        self.assertTrue(self.d0.get_node_by_id(0).children == {1:1})
-        self.assertTrue(self.d0.get_node_by_id(1).parents == {0:1})
+        self.assertEqual(self.d0.get_node_by_id(0).children, {1:1})
+        self.assertEqual(self.d0.get_node_by_id(1).parents, {0:1})
         self.d0.remove_edge(0,1)
-        self.assertTrue(self.d0.get_node_by_id(0).children == {})
-        self.assertTrue(self.d0.get_node_by_id(1).parents == {})
-        self.assertTrue(self.d0.get_input_ids() == [0,1])
-        self.assertTrue(self.d0.get_output_ids() == [1,0])
+        self.assertEqual(self.d0.get_node_by_id(0).children, {})
+        self.assertEqual(self.d0.get_node_by_id(1).parents, {})
+        self.assertEqual(self.d0.get_input_ids(), [0,1])
+        self.assertEqual(self.d0.get_output_ids(), [1,0])
+
+    def test_remove_parallel_edges(self):
+        self.d1.remove_parallel_edges(1, 2)
+        self.assertEqual(self.d1.get_node_by_id(1).children, {})
+        self.assertEqual(self.d1.get_node_by_id(2).parents, {})
+        self.assertEqual(self.d1.get_input_ids(), [0, 2])
+        self.assertEqual(self.d1.get_output_ids(), [2, 1])
+        
         
 
 

@@ -65,12 +65,15 @@ class node:
         Node id has to be a new parent for self'''
         self.parents.update({id:1})
     
+    # On ne renvoi pas d'exception dans les cas ou il n'y a pas de liaisons
+
     def remove_parent_once(self, id):
         '''remove a link to the parent with id'''
         if self.isDirectChild(id):
             self.parents[id] = self.parents[id] - 1
             if  self.parents[id] <= 0:
                 del self.parents[id]
+            
 
     def remove_child_once(self, id):
         '''remove a link to the children with id'''
@@ -118,8 +121,8 @@ class open_digraph: # for open directed graph
         self.inputs = inputs
         self.outputs = outputs
         self.nodes = {node.id:node for node in nodes} # self.nodes: <int,node> dict
-        self.sortedListOfId = sorted(self.nodes.keys()) # on garde toujours une liste triee
-                                                        # des ID pour ne pas avoir a la recalculer a chaque fois
+        self.lastNewId = max(list(self.nodes.keys())) # on garde toujours un id superieur a tous les autres
+                                                        # (pas forcemment le max)
 
     def get_input_ids(self):
         '''get the input ids'''
@@ -130,7 +133,7 @@ class open_digraph: # for open directed graph
         return self.outputs
 
     def get_id_node_map(self):
-        '''get the id:node dic'''
+        '''get the id:node dict'''
         return self.nodes
 
     def get_nodes(self):
@@ -139,7 +142,7 @@ class open_digraph: # for open directed graph
 
     def get_node_ids(self):
         '''get the nodes id list'''
-        return self.sortedListOfId
+        return list(self.nodes.keys())
 
     def get_node_by_id(self, id):
         '''get the node with the ID id'''
@@ -181,11 +184,12 @@ class open_digraph: # for open directed graph
 
     def new_id(self):
         '''return a new id for the graph'''
-        return self.sortedListOfId[-1] + 1
+        return self.lastNewId + 1
 
     def add_edge(self, src, tgt):
-        '''add a link from node with id src to node with id tgt'''
-        if src not in self.sortedListOfId or tgt not in self.sortedListOfId:
+        '''add an edge from node with id src to node with id tgt'''
+        listOfId = self.get_node_ids()
+        if src not in listOfId or tgt not in listOfId:
             raise Exception("Les id passes en argument ne correspondent a aucun noeud")
         srcNode = self.get_node_by_id(src)
         tgtNode = self.get_node_by_id(tgt)
@@ -196,7 +200,27 @@ class open_digraph: # for open directed graph
             srcNode.add_child_id(tgt)
             tgtNode.add_parent_id(src)
 
-    def add_node(self, label='', parents={}, children={}): # Attention pas meme signature que dans le sujet (pb)
+    def remove_edge(self, src, tgt): # Question : Faut il retirer un noeud du graph s'il a 0 liaisons avec le reste ?
+        '''remove one edge from node with id src to node with id tgt'''
+        self.get_node_by_id(src).remove_child_once(tgt)
+        if self.get_node_by_id(src).get_children_ids() == [] and not src in self.get_output_ids():
+            self.get_output_ids().append(src)
+        self.get_node_by_id(tgt).remove_parent_once(src)
+        if self.get_node_by_id(tgt).get_parent_ids() == [] and not tgt in self.get_input_ids():
+            self.get_input_ids().append(tgt)
+
+    def remove_parallel_edges(self, src, tgt): # Meme question
+        '''remove all edge from node with id src to node with id tgt'''
+        srcNode = self.get_node_by_id(src)
+        tgtNode = self.get_node_by_id(tgt)
+        srcNode.remove_child_id(tgt)
+        if srcNode.get_children_ids() == [] and not src in self.get_output_ids():
+            self.get_output_ids().append(src)
+        tgtNode.remove_parent_id(src)
+        if tgtNode.get_parent_ids() == [] and not tgt in self.get_input_ids():
+            self.get_input_ids().append(tgt)
+
+    def add_node(self, label='', parents={}, children={}):
         '''
         Add a new node to the graph
         label : label for the new node
@@ -204,21 +228,26 @@ class open_digraph: # for open directed graph
         childrens : int->int dict; map the new node's children id to their multiplicity
         '''
         newId = self.new_id() # On choisit un nouvel id
-        self.sortedListOfId.append(newId) # On ajoute le nouvel id a la banque d'id
+        self.lastNewId = newId # On actualise le dernier id attribue
         newNode = node(newId, label, parents, children)
         self.nodes.update({newId:newNode}) # On ajoute le nouveau noeud au graph
 
         # Mise a jour des autres noeuds
+
+        # Si le noeud est entrant
         if parents == {}:
             self.inputs.append(newId)
             for idChildren in children:
                 if idChildren in self.inputs:
                     self.inputs.remove(idChildren)
+        # Si le noeud est sortant
         if children == {}:
             self.outputs.append(newId)
             for idParent in parents:
                 if idParent in self.outputs:
                     self.outputs.remove(idParent)
+
+        # Dans tous les cas
         for idParent in parents:
             # Ajout dans les parents
             parentNode = self.get_node_by_id(idParent)
@@ -255,15 +284,6 @@ class open_digraph: # for open directed graph
             # Condition 3
             if not idOutNode in self.nodes:
                 return False
-
-    def remove_edge(self, src, tgt):
-        '''remove one edge from src to tgt'''
-        self.get_node_by_id(src).remove_child_once(tgt)
-        if self.get_node_by_id(src).get_children_ids() == [] and not src in self.get_output_ids():
-            self.get_output_ids().append(src)
-        self.get_node_by_id(tgt).remove_parent_once(src)
-        if self.get_node_by_id(tgt).get_parent_ids() == [] and not tgt in self.get_input_ids():
-            self.inputs.append(tgt)
 
 
     def copy(self):
