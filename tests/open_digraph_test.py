@@ -66,8 +66,8 @@ class OpenDigraphTest(unittest.TestCase):
         self.d0 = open_digraph([0], [1], [node(0, 'i', {}, {1:2}), node(1, 'j', {0:2}, {})])
         self.d1 = open_digraph([0], [2], [
             node(0, 'i', {}, {1:1}), 
-            node(1, 'j', {0:1}, {2:3}), 
-            node(2, 'k', {1:3}, {})])
+            node(1, 'j', {0:1}, {2:1}), 
+            node(2, 'k', {1:1}, {})])
         self.d2 = open_digraph([0, 1], [4], [
                     node(0, 'i0', {}, {2:1}),
                     node(1, 'i1', {}, {3:1}),
@@ -146,6 +146,15 @@ class OpenDigraphTest(unittest.TestCase):
         self.assertFalse(self.d0.is_well_formed())
         self.assertTrue(self.d2.is_well_formed())
         self.assertFalse(self.d3.is_well_formed())
+
+    def test_add_input_output_node(self):
+        self.d1.add_input_node('newInput', 1)
+        self.assertEqual(self.d1.get_input_ids(), [0, 3])
+        self.assertEqual(self.d1.get_node_by_id(1).parents[3], 1)
+        self.d1.add_output_nodes('newOutput', 1)
+        self.assertEqual(self.d1.get_output_ids(), [2, 4])
+        self.assertEqual(self.d1.get_node_by_id(1).children[4], 1)
+        self.assertTrue(self.d1.is_well_formed())
         
 
 

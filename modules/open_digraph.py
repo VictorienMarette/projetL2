@@ -315,7 +315,39 @@ class open_digraph: # for open directed graph
         # on a tout teste
         return True
             
-            
+    def add_input_node(self, label, id):
+        '''
+        Create a new input node
+        Raise exception if the node id doesnt exists
+        Raise exception if the node id is a graph entry
+        '''
+        if not id in self.get_node_ids():
+            raise Exception("Le noeud id n'existe pas")
+        if id in self.get_input_ids():
+            raise Exception("Le noeud id est deja une entree du graph")
+        newId = self.new_id()
+        self.lastNewId = newId
+        Node = node(newId, label, {}, {id:1})
+        self.get_node_by_id(id).add_parent_id(newId)
+        self.add_input_id(newId)
+        self.nodes.update({newId: Node})
+
+    def add_output_nodes(self, label, id):
+        '''
+        Create a new output node
+        Raise exception if the node id doesnt exists
+        Raise exception if the node id is a graph exit
+        '''
+        if not id in self.get_node_ids():
+            raise Exception("Le noeud id n'existe pas")
+        if id in self.get_output_ids():
+            raise Exception("Le noeud id est deja une sortie du graph")
+        newId = self.new_id()
+        self.lastNewId = newId
+        Node = node(newId, label, {id:1}, {})
+        self.get_node_by_id(id).add_child_id(newId)
+        self.add_output_id(newId)
+        self.nodes.update({newId: Node})
 
 
     def copy(self):
