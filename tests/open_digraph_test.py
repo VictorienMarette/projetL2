@@ -68,6 +68,20 @@ class OpenDigraphTest(unittest.TestCase):
             node(0, 'i', {}, {1:1}), 
             node(1, 'j', {0:1}, {2:3}), 
             node(2, 'k', {1:3}, {})])
+        self.d2 = open_digraph([0, 1], [4], [
+                    node(0, 'i0', {}, {2:1}),
+                    node(1, 'i1', {}, {3:1}),
+                    node(2, 'n2', {0:1}, {3:2}),
+                    node(3, 'n3', {1:1, 2:2}, {4:1}),
+                    node(4, 'o4', {3: 1}, {})]
+                    )
+        self.d3 = open_digraph([0, 1], [4], [
+                    node(0, 'i0', {}, {2:1}),
+                    node(1, 'i1', {}, {3:1}),
+                    node(2, 'n2', {0:1}, {3:2}),
+                    node(3, 'n3', {1:1, 2:3}, {4:1}),
+                    node(4, 'o4', {3: 1}, {})]
+                    )
 
     # Tests des getters
     def test_get_inputs(self):
@@ -128,6 +142,10 @@ class OpenDigraphTest(unittest.TestCase):
         self.assertEqual(self.d1.get_input_ids(), [0, 2])
         self.assertEqual(self.d1.get_output_ids(), [2, 1])
         
+    def test_is_well_formed(self):
+        self.assertFalse(self.d0.is_well_formed())
+        self.assertTrue(self.d2.is_well_formed())
+        self.assertFalse(self.d3.is_well_formed())
         
 
 
