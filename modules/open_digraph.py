@@ -207,23 +207,41 @@ class open_digraph: # for open directed graph
 
     def remove_edge(self, src, tgt): # Question : Faut il retirer un noeud du graph s'il a 0 liaisons avec le reste ?
         '''remove one edge from node with id src to node with id tgt'''
+        #l'edge est enlevé
         self.get_node_by_id(src).remove_child_once(tgt)
-        if self.get_node_by_id(src).get_children_ids() == [] and not src in self.get_output_ids():
-            self.get_output_ids().append(src)
         self.get_node_by_id(tgt).remove_parent_once(src)
-        if self.get_node_by_id(tgt).get_parent_ids() == [] and not tgt in self.get_input_ids():
-            self.get_input_ids().append(tgt)
+        #on regarde si l'edge existe encore
+        if src in self.get_input_ids() and len(self.get_node_by_id(src).get_children_ids()) != 1:
+            raise Exception("Le noeud " + str(src) + " est un inputs mais n'a pas un unique enfant")
+        if tgt in self.get_output_ids() and len(self.get_node_by_id(tgt).get_parent_ids()) != 1:
+            raise Exception("Le noeud " + str(src) + " est un output mais n'a pas un unique parent")
+
 
     def remove_parallel_edges(self, src, tgt): # Meme question
         '''remove all edge from node with id src to node with id tgt'''
-        srcNode = self.get_node_by_id(src)
-        tgtNode = self.get_node_by_id(tgt)
-        srcNode.remove_child_id(tgt)
-        if srcNode.get_children_ids() == [] and not src in self.get_output_ids():
-            self.get_output_ids().append(src)
-        tgtNode.remove_parent_id(src)
-        if tgtNode.get_parent_ids() == [] and not tgt in self.get_input_ids():
-            self.get_input_ids().append(tgt)
+        #les edges sont enlevé
+        self.get_node_by_id(src).remove_child_id(tgt)
+        self.get_node_by_id(tgt).remove_parent_id(src)
+        #on regarde si l'edge existe encore
+        if src in self.get_input_ids() and len(self.get_node_by_id(src).get_children_ids()) != 1:
+            raise Exception("Le noeud " + str(src) + " est un inputs mais n'a pas un unique enfant")
+        if tgt in self.get_output_ids() and len(self.get_node_by_id(tgt).get_parent_ids()) != 1:
+            raise Exception("Le noeud " + str(src) + " est un output mais n'a pas un unique parent")
+
+    def remove_node_by_id(self, id):
+        '''remove a node from the open_disgraphe'''
+        parents = self.get_node_by_id(id).get_parent_ids()
+        childrens = self.get_node_by_id(id).get_children_ids()
+        #remove outputs inputs
+        if id in self.outputs:
+            self.outputs.remove(id)
+        if id in self.inputs:
+            self.inputs.remove(id)
+        #remove edges
+        for children in childrens:
+            self.remove_parallel_edges(id, children)
+        for parent in parents:
+            self.remove_parallel_edges(parent, id)
 
     def add_node(self, label='', parents={}, children={}):
         '''

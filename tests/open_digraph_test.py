@@ -82,6 +82,14 @@ class OpenDigraphTest(unittest.TestCase):
                     node(3, 'n3', {1:1, 2:3}, {4:1}),
                     node(4, 'o4', {3: 1}, {})]
                     )
+        self.d4 = open_digraph([0, 1], [4], [
+                    node(0, 'i0', {}, {2:1}),
+                    node(1, 'i1', {}, {2:1}),
+                    node(2, 'n2', {0:1, 1:1}, {3:2}),
+                    node(3, 'n3', {2:2}, {5:1}),
+                    node(5, 'n4', {3:1}, {4:1}),
+                    node(4, 'o4', {5: 1}, {})]
+                    )
 
     # Tests des getters
     def test_get_inputs(self):
@@ -126,26 +134,30 @@ class OpenDigraphTest(unittest.TestCase):
         self.assertEqual(self.d0.get_node_by_id(1), node(1, 'j', {0:2}, {3:7}))
 
     def test_remove_edge(self):
-        self.d0.remove_edge(0,1)
-        self.assertEqual(self.d0.get_node_by_id(0).children, {1:1})
-        self.assertEqual(self.d0.get_node_by_id(1).parents, {0:1})
-        self.d0.remove_edge(0,1)
-        self.assertEqual(self.d0.get_node_by_id(0).children, {})
-        self.assertEqual(self.d0.get_node_by_id(1).parents, {})
-        self.assertEqual(self.d0.get_input_ids(), [0,1])
-        self.assertEqual(self.d0.get_output_ids(), [1,0])
+        self.d2.remove_edge(2,3)
+        self.assertEqual(self.d2.get_node_by_id(2).get_children_ids(), [3])
+        self.assertEqual(self.d2.get_node_by_id(3).get_parent_ids(), [1,2])
+        self.d2.remove_edge(2,3)
+        self.assertEqual(self.d2.get_node_by_id(2).get_children_ids(), [])
+        self.assertEqual(self.d2.get_node_by_id(3).get_parent_ids(), [1])
 
+    
     def test_remove_parallel_edges(self):
-        self.d1.remove_parallel_edges(1, 2)
-        self.assertEqual(self.d1.get_node_by_id(1).children, {})
-        self.assertEqual(self.d1.get_node_by_id(2).parents, {})
-        self.assertEqual(self.d1.get_input_ids(), [0, 2])
-        self.assertEqual(self.d1.get_output_ids(), [2, 1])
+        self.d2.remove_parallel_edges(2,3)
+        self.assertEqual(self.d2.get_node_by_id(2).get_children_ids(), [])
+        self.assertEqual(self.d2.get_node_by_id(3).get_parent_ids(), [1])
+  
+    def test_remove_node_by_id(self):
+        self.d4.remove_node_by_id(3)
+        self.assertEqual(self.d4.get_node_by_id(2).get_children_ids(), [])
+        self.assertEqual(self.d4.get_node_by_id(5).get_parent_ids(), [])
+
         
     def test_is_well_formed(self):
         self.assertFalse(self.d0.is_well_formed())
         self.assertTrue(self.d2.is_well_formed())
         self.assertFalse(self.d3.is_well_formed())
+        self.assertTrue(self.d4.is_well_formed())
 
     def test_add_input_output_node(self):
         self.d1.add_input_node('newInput', 1)
@@ -161,3 +173,5 @@ class OpenDigraphTest(unittest.TestCase):
 
 if __name__ == '__main__': # the following code is called only when
     unittest.main() # precisely this file is run
+
+#python3 -m unittest discover tests "*_test.py"
