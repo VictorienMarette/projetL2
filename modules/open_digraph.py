@@ -1,3 +1,5 @@
+from matrice import *
+
 class node:
     def __init__(self, identity, label, parents, children):
         '''
@@ -121,9 +123,11 @@ class open_digraph: # for open directed graph
         self.inputs = inputs
         self.outputs = outputs
         self.nodes = {node.id:node for node in nodes} # self.nodes: <int,node> dict
-        self.lastNewId = max(list(self.nodes.keys())) # on garde toujours un id superieur a tous les autres
+        if self.nodes == {}:
+            self.lastNewId = 0
+        else:
+            self.lastNewId = max(list(self.nodes.keys())) # on garde toujours un id superieur a tous les autres
                                                         # (pas forcemment le max)
-
     def get_input_ids(self):
         '''get the input ids'''
         return self.inputs
@@ -175,8 +179,8 @@ class open_digraph: # for open directed graph
 
     def __str__(self):
         res = ""
-        for n in(self.nodes):
-            res += self.nodes[n].label + " "
+        for n in(self.nodes.values()):
+            res += f"Node({str(n)})\n"
         return res
     
     def __repr__(self):
@@ -390,7 +394,47 @@ class open_digraph: # for open directed graph
         self.add_output_id(newId)
         self.nodes.update({newId: Node})
 
+    @classmethod
+    def random(n, bound, inputs=0, outputs=0, form="free"):
+        '''
+        
+        '''
+        if form=="free":
+            return graph_from_adjacency_matrix
+        elif form=="DAG":
+            ...
+        elif form=="oriented":
+            ...
+        elif form=="loop-free":
+            ...
+        elif form=="undirected":
+            ...
+        elif form=="loop-free undirected":
+            return False
 
     def copy(self):
         '''return a copy of the graph'''
         return open_digraph(self.inputs.copy(), self.outputs.copy(), [n.copy() for n in self.nodes.values()])
+
+
+
+
+
+
+def graph_from_adjacency_matrix(mat):
+    '''
+    return the graph corresponding to the matrix mat
+    '''
+    n = len(mat)
+    d = open_digraph([], [], [])
+    for i in range(n):
+        parents = {}
+        children = {}
+        for j in range(n):
+            if mat[i][j] != 0:
+                children.update({j:mat[i][j]})
+            if mat[j][i] != 0:
+                parents.update({j:mat[j][i]})
+        nod = node(i, 'n' + str(i), parents, children)
+        d.nodes.update({i:nod})
+    return d

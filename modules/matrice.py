@@ -8,6 +8,12 @@ def random_int_list(n, bound):
     return [int(random.random()*bound) for i in range(n)]
 
 def random_symetric_int_matrix(n, bound, null_diag=True):
+    '''
+    return a random symetric int matrix
+    n : int size of the matrix
+    bound : int max number in the matrix
+    null_diag : True if the diagonale must be empty
+    '''
     mat = [[] for i in range(n)]
     for i in range(n):
         li = random_int_list(n-i, bound)
