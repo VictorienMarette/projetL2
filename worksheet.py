@@ -1,4 +1,5 @@
 from modules.open_digraph import *
+from modules.matrice import *
 import inspect
 
 #TD1
@@ -17,3 +18,4 @@ print("Je deteste python")
 d0 = open_digraph([0], [1], [node(0, 'i', {}, {1:2}), node(1, 'j', {0:2}, {})])
 d0.add_node('new', {}, {0:2})
 print(d0)
+
