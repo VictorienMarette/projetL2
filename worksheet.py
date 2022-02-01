@@ -19,3 +19,5 @@ d0 = open_digraph([0], [1], [node(0, 'i', {}, {1:2}), node(1, 'j', {0:2}, {})])
 d0.add_node('new', {}, {0:2})
 print(d0)
 
+mat = random_symetric_int_matrix(5, 10)
+afficheMatrix(mat)
