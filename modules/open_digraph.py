@@ -412,6 +412,20 @@ class open_digraph: # for open directed graph
         elif form=="loop-free undirected":
             return False
 
+    def random_unique_index(self):
+        '''
+        renvoie un dictionnaire, associant `a chaque id de noeud un unique entier 0 ≤ i < n
+        '''
+        l = [i for i in range(len(self.get_node_ids()))]
+        m = self.get_node_ids()
+        d = {}
+        while len(l) > 0:
+            i = int(random.random()*len(l))
+            d[m.pop()] = l.pop(i)
+        return d
+
+
+
     def copy(self):
         '''return a copy of the graph'''
         return open_digraph(self.inputs.copy(), self.outputs.copy(), [n.copy() for n in self.nodes.values()])
