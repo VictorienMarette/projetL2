@@ -216,6 +216,13 @@ class open_digraph: # for open directed graph
         if tgt in self.get_output_ids() and len(self.get_node_by_id(tgt).get_parent_ids()) != 1:
             raise Exception("Le noeud " + str(src) + " est un output mais n'a pas un unique parent")
 
+    def remove_edges(self, list):
+        '''
+        apply remove_edge to the argments list = [src, tgt]
+        list : (int, int) pairs (src, tgt)
+        '''
+        for p in list:
+            self.remove_edge(p[0], p[1])        
 
     def remove_parallel_edges(self, src, tgt): # Meme question
         '''remove all edge from node with id src to node with id tgt'''
@@ -227,6 +234,14 @@ class open_digraph: # for open directed graph
             raise Exception("Le noeud " + str(src) + " est un inputs mais n'a pas un unique enfant")
         if tgt in self.get_output_ids() and len(self.get_node_by_id(tgt).get_parent_ids()) != 1:
             raise Exception("Le noeud " + str(src) + " est un output mais n'a pas un unique parent")
+
+    def remove_parallel_edges_2(self, list):
+        '''
+        apply remove_parallel_edge to the argument list = [src, tgt]
+        list : (int, int) pairs (src, tgt)
+        '''
+        for p in list:
+            self.remove_parallel_edges(p[0], p[1])
 
     def remove_node_by_id(self, id):
         '''remove a node from the open_disgraphe'''
@@ -242,6 +257,14 @@ class open_digraph: # for open directed graph
             self.remove_parallel_edges(id, children)
         for parent in parents:
             self.remove_parallel_edges(parent, id)
+
+    def remove_nodes_by_id(self, listOfId):
+        '''
+        apply remove_node_by_id for all the id in listOfId
+        listOfId : list of int (the ids)
+        '''
+        for id in listOfId:
+            self.remove_node_by_id(id)
 
     def add_node(self, label='', parents={}, children={}):
         '''

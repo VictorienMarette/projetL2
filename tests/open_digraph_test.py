@@ -133,24 +133,35 @@ class OpenDigraphTest(unittest.TestCase):
         self.assertEqual(self.d0.get_node_by_id(3), node(3, 'new2', {1:7}, {}))
         self.assertEqual(self.d0.get_node_by_id(1), node(1, 'j', {0:2}, {3:7}))
 
+        self.d1.add_node('new2', {1:2}, {1:2})
+        self.assertEqual(self.d1.get_node_by_id(3).parents[1], 2)
+        self.assertEqual(self.d1.get_node_by_id(3).children[1], 2)
+        self.assertTrue(self.d1.is_well_formed())
+
     def test_remove_edge(self):
         self.d2.remove_edge(2,3)
         self.assertEqual(self.d2.get_node_by_id(2).get_children_ids(), [3])
+        self.assertEqual(self.d2.get_node_by_id(2).children[3], 1)
         self.assertEqual(self.d2.get_node_by_id(3).get_parent_ids(), [1,2])
+        self.assertEqual(self.d2.get_node_by_id(3).parents[2], 1)
+        self.assertTrue(self.d2.is_well_formed())
         self.d2.remove_edge(2,3)
         self.assertEqual(self.d2.get_node_by_id(2).get_children_ids(), [])
         self.assertEqual(self.d2.get_node_by_id(3).get_parent_ids(), [1])
+        self.assertTrue(self.d2.is_well_formed())
 
     
     def test_remove_parallel_edges(self):
         self.d2.remove_parallel_edges(2,3)
         self.assertEqual(self.d2.get_node_by_id(2).get_children_ids(), [])
         self.assertEqual(self.d2.get_node_by_id(3).get_parent_ids(), [1])
+        self.assertTrue(self.d2.is_well_formed())
   
     def test_remove_node_by_id(self):
         self.d4.remove_node_by_id(3)
         self.assertEqual(self.d4.get_node_by_id(2).get_children_ids(), [])
         self.assertEqual(self.d4.get_node_by_id(5).get_parent_ids(), [])
+        self.assertTrue(self.d4.is_well_formed())
 
         
     def test_is_well_formed(self):
@@ -163,6 +174,7 @@ class OpenDigraphTest(unittest.TestCase):
         self.d1.add_input_node('newInput', 1)
         self.assertEqual(self.d1.get_input_ids(), [0, 3])
         self.assertEqual(self.d1.get_node_by_id(1).parents[3], 1)
+        self.assertTrue(self.d1.is_well_formed())
         self.d1.add_output_nodes('newOutput', 1)
         self.assertEqual(self.d1.get_output_ids(), [2, 4])
         self.assertEqual(self.d1.get_node_by_id(1).children[4], 1)
