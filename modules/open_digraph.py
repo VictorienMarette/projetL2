@@ -1,4 +1,6 @@
-from matrice import *
+from tkinter.filedialog import Open
+from modules.matrice import *
+import random
 
 class node:
     def __init__(self, identity, label, parents, children):
@@ -395,26 +397,43 @@ class open_digraph: # for open directed graph
         self.nodes.update({newId: Node})
 
     @classmethod
-    def random(n, bound, inputs=0, outputs=0, form="free"):
+    def random(cls, n, bound, inputs=0, outputs=0, form="free"):
         '''
-        
+        return a new random graph
+        form =
+            free : graph libre
+            DAG : graph dirige acyclique
+            oriented : graph oriente
+            loop-free : pas de regle sur les loops
+            undirected : graph non dirige
+            loop-free undirected : non dirige sans regle sur les loops
         '''
+        g = open_digraph([], [], [])
         if form=="free":
-            return graph_from_adjacency_matrix
+            g = graph_from_adjacency_matrix(random_int_matrix(n, bound, null_diag=True))
         elif form=="DAG":
-            ...
+            g = graph_from_adjacency_matrix(random_triangular_int_matrix(n, bound, null_diag=True))
         elif form=="oriented":
-            ...
-        elif form=="loop-free":
-            ...
+            g = graph_from_adjacency_matrix(random_oriented_int_matrix(n, bound, null_diag=True))
+        elif form=="loop-free": # ne serait ce pas plutot loop free oriented ?
+            g = graph_from_adjacency_matrix(random_int_matrix(n, bound, null_diag=False))
         elif form=="undirected":
-            ...
+            g = graph_from_adjacency_matrix(random_symetric_int_matrix(n, bound, null_diag=True))
         elif form=="loop-free undirected":
-            return False
+            g = graph_from_adjacency_matrix(random_symetric_int_matrix(n, bound, null_diag=False))
+
+        for i in range(inputs):
+            id = random.randint(0, n-1)
+            g.add_input_node("i" + str(i), id)
+        for j in range(outputs):
+            id = random.randint(0, n-1)
+            g.add_output_nodes("o" + str(j), id)
+        return g
+            
 
     def random_unique_index(self):
         '''
-        renvoie un dictionnaire, associant `a chaque id de noeud un unique entier 0 ≤ i < n
+        renvoie un dictionnaire, associant a chaque id de noeud un unique entier 0 =< i < n
         '''
         l = [i for i in range(len(self.get_node_ids()))]
         m = self.get_node_ids()
@@ -423,6 +442,20 @@ class open_digraph: # for open directed graph
             i = int(random.random()*len(l))
             d[m.pop()] = l.pop(i)
         return d
+
+    def adjacency_matrix(self):
+        '''renvoie une matrice d’adjacence du graphe'''
+        l = []
+        d = self.random_unique_index()
+        for i in range(len(self.get_node_ids())):
+            l.append([])
+            n = self.get_node_by_id(d[i])
+            for j in range(len(self.get_node_ids())):
+                if d[j] in n.get_children_ids():
+                    l[i].append(n.children[d[j]])
+                else:
+                    l[i].append(0)
+        return l
 
 
 
@@ -451,4 +484,5 @@ def graph_from_adjacency_matrix(mat):
                 parents.update({j:mat[j][i]})
         nod = node(i, 'n' + str(i), parents, children)
         d.nodes.update({i:nod})
+        d.lastNewId = n-1
     return d

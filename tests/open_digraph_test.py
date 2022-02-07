@@ -4,6 +4,7 @@ root = os.path.normpath(os.path.join(__file__, './../..'))
 sys.path.append(root) # allows us to fetch files from the project root
 import unittest
 from modules.open_digraph import *
+from modules.matrice import *
 
 class InitTest(unittest.TestCase):
     def test_init_node(self):
@@ -180,6 +181,33 @@ class OpenDigraphTest(unittest.TestCase):
         self.assertEqual(self.d1.get_node_by_id(1).children[4], 1)
         self.assertTrue(self.d1.is_well_formed())
         
+class matriceTest(unittest.TestCase):
+    def setUp(self):
+        self.strTab = [
+            "free",
+            "DAG",
+            "oriented",
+            "loop-free",
+            "undirected",
+            "loop-free undirected"
+        ]
+        self.t = [random_int_matrix(10, 4),
+        random_oriented_int_matrix(10, 4),
+        random_symetric_int_matrix(10, 4),
+        random_triangular_int_matrix(10, 4)]
+
+    def test_generated_matrix(self):
+        for m in self.t:
+            self.assertEqual(len(m), 10)
+            for l in m:
+                self.assertEqual(len(m), 10)
+                for i in l:
+                    self.assertTrue(i in [0, 1, 2, 3])
+                    
+    def test_random(self):
+        for s in self.strTab:
+            self.assertTrue(open_digraph.random(10, 4, 2, 3, form=s).is_well_formed())
+
 
 
 

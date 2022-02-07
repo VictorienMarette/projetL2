@@ -23,3 +23,6 @@ mat = random_symetric_int_matrix(3, 3)
 afficheMatrix(mat)
 graph = graph_from_adjacency_matrix(mat)
 print(graph)
+
+g = open_digraph.random(5, 3, inputs=2, outputs=1, form='oriented')
+print(g)
