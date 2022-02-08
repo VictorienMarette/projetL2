@@ -530,7 +530,7 @@ def from_dot_file(path, nombre_espace_tab=4):
             nodes[i] = node(i, '', {}, {})
 
         if nl[2] == "[":
-            nodes[i].set_label(nl[8:][:-2])
+            nodes[i].set_label(nl[10:][:-1])
 
         elif nl[2] == "-":
             nl = nl[1:]

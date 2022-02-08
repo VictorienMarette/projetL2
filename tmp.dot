@@ -1,8 +1,8 @@
 digraph G {
-    v0 [label="="i"]
-    v1 [label="="L-"]
-    v2 [label="="Victorie"]
-    v3 [label="="Jola"]
+    v0 [label="i0"]
+    v1 [label="L-A"]
+    v2 [label="Victorien"]
+    v3 [label="Jolan"]
     v0 -> v1 
     v1 -> v2 
     v1 -> v2 
