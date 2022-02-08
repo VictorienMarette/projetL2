@@ -1,6 +1,7 @@
 from tkinter.filedialog import Open
 from modules.matrice import *
 import random
+import os
 
 class node:
     def __init__(self, identity, label, parents, children):
@@ -458,6 +459,11 @@ class open_digraph: # for open directed graph
         return l
 
     def save_as_dot_file(self, path, verbose=False):
+        """
+        save the current graph to a dot file
+        path: place the save the .dot
+        verbose: true if the id must appear in the graph
+        """
         f = open(path, "w")
         f.write("digraph G {\n")
         for Node in self.nodes:
@@ -472,6 +478,12 @@ class open_digraph: # for open directed graph
                     f.write(f'    v{Node.get_id()} -> v{c} \n')
         f.write("}")
         f.close()
+
+    def display(self, verbose=False):
+        self.save_as_dot_file("tmp.dot", verbose)
+        os.system("dot -Tpdf tmp.dot -o tmp.pdf")
+        os.system("START tmp.pdf") # fonctionne pour le cmd prompt de windows
+
 
     def copy(self):
         '''return a copy of the graph'''

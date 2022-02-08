@@ -31,4 +31,4 @@ d = open_digraph([0], [3], [node(0, 'i0', {}, {1:1}),
                             node(1, 'L-A', {0:1}, {2:3}),
                             node(2, 'Victorien', {1:3}, {3:1}),
                             node(3, 'Jolan', {2:1}, {})])
-d.save_as_dot_file("test.dot", verbose=True)
+g.display(verbose=True)
