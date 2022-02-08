@@ -480,6 +480,9 @@ class open_digraph: # for open directed graph
         f.close()
 
     def display(self, verbose=False):
+        """
+        save the current graph and display it
+        """
         self.save_as_dot_file("tmp.dot", verbose)
         os.system("dot -Tpdf tmp.dot -o tmp.pdf")
         os.system("START tmp.pdf") # fonctionne pour le cmd prompt de windows
@@ -512,3 +515,41 @@ def graph_from_adjacency_matrix(mat):
         d.nodes.update({i:nod})
         d.lastNewId = n-1
     return d
+
+def from_dot_file(path, nombre_espace_tab=4):
+    nodes = {}
+    f = open(path, "r")
+    lines = f.readlines()[1:][:-1]
+    for l in lines:
+        nl = l[(nombre_espace_tab+1):][:-2]  
+        try:
+            i = int(nl[0])
+        except:
+            print("pas un int")
+        if not i in nodes.keys():
+            nodes[i] = node(i, '', {}, {})
+
+        if nl[2] == "[":
+            nodes[i].set_label(nl[8:][:-2])
+
+        elif nl[2] == "-":
+            nl = nl[1:]
+            while nl != "":
+                nl = nl[5:]
+                try:
+                    j = int(nl[0])
+                except:
+                    print("pas un int")
+                if not j in nodes.keys():
+                    nodes[j] = node(j, '', {}, {})
+                if nodes[i].isDirectParent(j):
+                    nodes[i].children[j] += 1
+                    nodes[j].parents[i] += 1
+                else:
+                    nodes[i].add_child_id(j)
+                    nodes[j].add_parent_id(i)
+                
+                i = j
+                nl = nl[1:]
+            
+    return open_digraph([],[],nodes.values())

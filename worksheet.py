@@ -24,11 +24,13 @@ afficheMatrix(mat)
 graph = graph_from_adjacency_matrix(mat)
 print(graph)
 
-g = open_digraph.random(5, 3, inputs=2, outputs=1, form='oriented')
+g = open_digraph.random(5, 3, inputs=2, outputs=1, form='undirected')
 print(g)
 
 d = open_digraph([0], [3], [node(0, 'i0', {}, {1:1}),
                             node(1, 'L-A', {0:1}, {2:3}),
                             node(2, 'Victorien', {1:3}, {3:1}),
                             node(3, 'Jolan', {2:1}, {})])
-g.display(verbose=True)
+d.save_as_dot_file("test.dot")
+r = from_dot_file("test.dot")
+r.display()
