@@ -457,7 +457,21 @@ class open_digraph: # for open directed graph
                     l[i].append(0)
         return l
 
-
+    def save_as_dot_file(self, path, verbose=False):
+        f = open(path, "w")
+        f.write("digraph G {\n")
+        for Node in self.nodes:
+            n = self.get_node_by_id(Node)
+            if(verbose):
+                f.write(f'    v{n.get_id()} [label="{n.get_label()}, id {Node}"]\n')
+            else:
+                f.write(f'    v{n.get_id()} [label="{n.get_label()}"]\n')
+        for Node in list(self.get_nodes()):
+            for c in Node.children:
+                for i in range(Node.children[c]):
+                    f.write(f'    v{Node.get_id()} -> v{c} \n')
+        f.write("}")
+        f.close()
 
     def copy(self):
         '''return a copy of the graph'''
