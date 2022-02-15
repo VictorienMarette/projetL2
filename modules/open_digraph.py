@@ -273,13 +273,17 @@ class open_digraph: # for open directed graph
         for id in listOfId:
             self.remove_node_by_id(id)
 
-    def add_node(self, label='', parents={}, children={}):
+    def add_node(self, label='', parents=None, children=None):
         '''
         Add a new node to the graph
         label : label for the new node
         parents : int->int dict; map the new node's parents id to their multiplicity
         childrens : int->int dict; map the new node's children id to their multiplicity
         '''
+        if parents == None:
+            parents =  {}
+        if children == None:
+            children = {}
         newId = self.new_id() # On choisit un nouvel id
         self.lastNewId = newId # On actualise le dernier id attribue
         newNode = node(newId, label, parents, children)

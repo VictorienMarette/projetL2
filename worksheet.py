@@ -1,5 +1,6 @@
 from modules.open_digraph import *
 from modules.matrice import *
+from modules.bool_circ import *
 import inspect
 
 #TD1
@@ -31,6 +32,4 @@ d = open_digraph([0], [3], [node(0, 'i0', {}, {1:1}),
                             node(1, 'L-A', {0:1}, {2:3}),
                             node(2, 'Victorien', {1:3}, {3:1}),
                             node(3, 'Jolan', {2:1}, {})])
-d.save_as_dot_file("test.dot")
-r = from_dot_file("test.dot")
-r.display()
+
