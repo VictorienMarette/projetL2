@@ -117,6 +117,14 @@ class OpenDigraphTest(unittest.TestCase):
                     node(5, 'n4', {3:1}, {4:1}),
                     node(4, 'o4', {5: 1}, {})]
                     )
+        self.d5 = open_digraph([0, 1], [4], [
+                    node(0, 'luffy', {4:1}, {1:1, 5:1}),
+                    node(1, 'saitema', {0:1}, {2:1}),
+                    node(2, 'naruto', {1:1}, {3:1}),
+                    node(3, 'spike', {2:1}, {4:1}),
+                    node(4, 'major', {4:1}, {0:1}),
+                    node(5, 'tintin', {0: 1}, {})]
+                    )
 
     # Tests des getters
     def test_get_inputs(self):
@@ -206,6 +214,11 @@ class OpenDigraphTest(unittest.TestCase):
         self.assertEqual(self.d1.get_output_ids(), [2, 4])
         self.assertEqual(self.d1.get_node_by_id(1).children[4], 1)
         self.assertTrue(self.d1.is_well_formed())
+
+    def test_is_well_formed(self):
+        self.assertTrue(self.d5.is_cyclic())
+        self.assertTrue(self.d4.is_cyclic())
+
         
 class matriceTest(unittest.TestCase):
     def setUp(self):
@@ -233,6 +246,7 @@ class matriceTest(unittest.TestCase):
     def test_random(self):
         for s in self.strTab:
             self.assertTrue(open_digraph.random(10, 4, 2, 3, form=s).is_well_formed())
+
 
 
 

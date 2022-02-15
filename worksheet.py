@@ -28,11 +28,6 @@ print(graph)
 g = open_digraph.random(5, 3, inputs=2, outputs=1, form='undirected')
 print(g)
 
-d = open_digraph([0], [3], [node(0, 'i0', {}, {1:1}),
-                            node(1, 'L-A', {0:1}, {2:3}),
-                            node(2, 'Victorien', {1:3}, {3:1}),
-                            node(3, 'Jolan', {2:1}, {})])
-
 circ = bool_circ([0, 1, 2], [8], [node(0, 'x1', {}, {3:1}),
                              node(1, 'x2', {}, {4:1}),
                              node(2, 'x3', {}, {5:1}),
@@ -44,3 +39,15 @@ circ = bool_circ([0, 1, 2], [8], [node(0, 'x1', {}, {3:1}),
                              node(8, 'out', {6:1}, {})])
 
 circ.display()
+
+d5 = open_digraph([0, 1], [4], [
+                    node(0, 'i0', {}, {2:1}),
+                    node(1, 'i1', {}, {2:1}),
+                    node(2, 'n2', {0:1, 1:1}, {3:2}),
+                    node(3, 'n3', {2:2}, {5:1}),
+                    node(5, 'n4', {3:1}, {4:1}),
+                    node(4, 'o4', {5: 1}, {})]
+                    )
+d5.save_as_dot_file("test.dot")
+r = from_dot_file("test.dot")
+r.display()
