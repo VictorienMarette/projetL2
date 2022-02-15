@@ -1,5 +1,6 @@
 from modules.open_digraph import *
 from modules.matrice import *
+from modules.bool_circ import *
 import inspect
 
 #TD1
@@ -26,6 +27,7 @@ print(graph)
 
 g = open_digraph.random(5, 3, inputs=2, outputs=1, form='undirected')
 print(g)
+
 
 d5 = open_digraph([0, 1], [4], [
                     node(0, 'i0', {}, {2:1}),
