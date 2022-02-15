@@ -1,11 +1,20 @@
 digraph G {
-    v0 [label="i0"]
-    v1 [label="L-A"]
-    v2 [label="Victorien"]
-    v3 [label="Jolan"]
-    v0 -> v1 
-    v1 -> v2 
-    v1 -> v2 
-    v1 -> v2 
-    v2 -> v3 
+    v0 [label="x1"]
+    v1 [label="x2"]
+    v2 [label="x3"]
+    v3 [label="&"]
+    v4 [label=""]
+    v5 [label="|"]
+    v6 [label="~"]
+    v7 [label="|"]
+    v8 [label="out"]
+    v0 -> v3 
+    v1 -> v4 
+    v2 -> v5 
+    v3 -> v7 
+    v4 -> v3 
+    v4 -> v5 
+    v5 -> v6 
+    v6 -> v7 
+    v7 -> v8 
 }

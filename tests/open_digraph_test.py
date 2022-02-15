@@ -5,6 +5,7 @@ sys.path.append(root) # allows us to fetch files from the project root
 import unittest
 from modules.open_digraph import *
 from modules.matrice import *
+from modules.bool_circ import *
 
 class InitTest(unittest.TestCase):
     def test_init_node(self):
@@ -23,6 +24,16 @@ class InitTest(unittest.TestCase):
         self.assertIsInstance(d0, open_digraph)
         self.assertEqual(d0.lastNewId, 1)
 
+    def test_init_bool_circ(self):
+        dref = open_digraph([0], [1], [node(0, 'i', {}, {1:2}), node(1, 'j', {0:2}, {})])
+        d0 = bool_circ(dref)
+        self.assertEqual(d0.inputs, [0])
+        self.assertEqual(d0.outputs, [1])
+        self.assertEqual(d0.nodes, {0: node(0, 'i', {}, {1:2}), 1: node(1, 'j', {0:2}, {})})
+        self.assertIsInstance(d0, open_digraph)
+        self.assertEqual(d0.lastNewId, 1)
+        
+
 
 class NodeTest(unittest.TestCase):
     def setUp(self):
@@ -32,6 +43,14 @@ class NodeTest(unittest.TestCase):
         self.ni = node(0, 'i', {},  {3: 2})
         self.nj = node(2, 'j', {0: 2}, {1: 1})
         self.nk = node(1, 'k', {2:1}, {})
+        self.graph = open_digraph([0, 1], [4], [
+                    node(0, 'i0', {}, {2:1}),
+                    node(1, 'i1', {}, {3:1}),
+                    node(2, 'n2', {0:1}, {3:2}),
+                    node(3, 'n3', {1:1, 2:2}, {4:1}),
+                    node(4, 'o4', {3: 1}, {})]
+                    )
+
     def test_get_id(self):
         self.assertEqual(self.n0.get_id(), 0)
     def test_get_label(self):
@@ -60,6 +79,13 @@ class NodeTest(unittest.TestCase):
     # Les getters et setters sont assez simples pour
     # ne pas avoir a les tester
 
+    def test_three_degree_function(self):
+        theNode2 = self.graph.get_node_by_id(2)
+        theNode3 = self.graph.get_node_by_id(3)
+        self.assertEqual(theNode2.outdegree(), 2)
+        self.assertEqual(theNode3.indegree(), 3)
+        self.assertEqual(theNode2.degree(), 3)
+        self.assertEqual(theNode3.degree(), 4)
 
 class OpenDigraphTest(unittest.TestCase):
     def setUp(self):

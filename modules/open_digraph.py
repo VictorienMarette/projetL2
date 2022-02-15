@@ -115,6 +115,23 @@ class node:
         '''return a copy of the node'''
         return node(self.id, self.label, self.parents.copy(), self.children.copy())
 
+    def indegree(self):
+        '''return the input degree of the node'''
+        res = 0
+        for nod in self.parents:
+            res += self.parents[nod]
+        return res
+
+    def outdegree(self):
+        '''return the output degree of the node'''
+        res = 0
+        for nod in self.children:
+            res += self.children[nod]
+        return res
+
+    def degree(self):
+        '''return the degree of the node'''
+        return self.indegree() + self.outdegree()
 
 class open_digraph: # for open directed graph
     def __init__(self, inputs, outputs, nodes):
