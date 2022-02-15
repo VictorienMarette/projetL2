@@ -349,7 +349,7 @@ class open_digraph: # for open directed graph
             node = self.get_node_by_id(idInNode)
             if len(node.children) != 1 or node.parents != {} or list(node.children.values()) != [1]:
                 return False
-            
+        
         for idOutNode in self.outputs:
             # Condition 1
             if not idOutNode in self.nodes:

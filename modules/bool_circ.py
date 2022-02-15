@@ -12,6 +12,7 @@ class bool_circ(open_digraph): # a subclass of open_digraph
         """
         super().__init__(g.inputs.copy(), g.outputs.copy(), g.nodes.values())
 
+    """
     def is_well_formed(self):
 
         # Condition sur les degrees
@@ -29,3 +30,4 @@ class bool_circ(open_digraph): # a subclass of open_digraph
                 return False
 
         return not self.is_cyclic()
+"""

@@ -35,10 +35,11 @@ circ = bool_circ(open_digraph([0, 1, 2], [8], [node(0, 'x1', {}, {3:1}),
                              node(4, '', {1:1}, {3:1, 5:1}),
                              node(5, '|', {2:1, 4:1}, {6:1}),
                              node(6, '~', {5:1}, {7:1}),
-                             node(7, '|', {3:1, 5:1}, {8:1}),
-                             node(8, 'out', {6:1}, {})]))
+                             node(7, '|', {3:1, 6:1}, {8:1}),
+                             node(8, 'out', {7:1}, {})]))
 
 print(circ.is_cyclic())
+print(circ.is_well_formed())
 circ.display()
 
 d5 = open_digraph([0, 1], [4], [
