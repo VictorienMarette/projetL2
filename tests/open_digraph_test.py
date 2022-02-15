@@ -247,7 +247,28 @@ class matriceTest(unittest.TestCase):
         for s in self.strTab:
             self.assertTrue(open_digraph.random(10, 4, 2, 3, form=s).is_well_formed())
 
+class bool_circTest(unittest.TestCase):
+    def setUp(self):
+        self.circ = bool_circ(open_digraph([0, 1, 2], [8], [node(0, 'x1', {}, {3:1}),
+                             node(1, 'x2', {}, {4:1}),
+                             node(2, 'x3', {}, {5:1}),
+                             node(3, '&', {0:1, 4:1}, {7:1}),
+                             node(4, '', {1:1}, {3:1, 5:1}),
+                             node(5, '|', {2:1, 4:1}, {6:1}),
+                             node(6, '~', {5:1}, {7:1}),
+                             node(7, '|', {3:1, 5:1}, {8:1}),
+                             node(8, 'out', {6:1}, {})]))
 
+        self.d3 = bool_circ(open_digraph([0, 1], [4], [
+                    node(0, 'i0', {}, {2:1}),
+                    node(1, 'i1', {}, {3:1}),
+                    node(2, '|', {0:1}, {3:2}),
+                    node(3, '&', {1:1, 2:3}, {4:1}),
+                    node(4, 'o4', {3: 1}, {})]))
+
+    def test_is_well_formed(self):
+        self.assertTrue(self.circ.is_well_formed())
+        self.assertFalse(self.d3.is_well_formed())
 
 
 

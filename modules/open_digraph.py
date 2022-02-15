@@ -504,10 +504,10 @@ class open_digraph: # for open directed graph
         """
         save the current graph and display it
         """
-        self.save_as_dot_file("tmp.dot", verbose)
+        self.save_as_dot_file("tmp_files/tmp.dot", verbose)
         if os.name == 'nt':
-            os.system("dot -Tpdf tmp.dot -o tmp.pdf")
-            os.system("START tmp.pdf") # fonctionne pour le cmd prompt de windows
+            os.system("dot -Tpdf tmp_files/tmp.dot -o tmp_files/tmp.pdf")
+            os.system("START tmp_files/tmp.pdf") # fonctionne pour le cmd prompt de windows
         else:
             print("zizi")
             os.system("dot -Tpdf tmp.dot -o tmp.pdf")
