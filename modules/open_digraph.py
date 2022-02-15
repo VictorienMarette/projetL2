@@ -484,17 +484,30 @@ class open_digraph: # for open directed graph
         save the current graph and display it
         """
         self.save_as_dot_file("tmp.dot", verbose)
-        os.system("dot -Tpdf tmp.dot -o tmp.pdf")
-        os.system("START tmp.pdf") # fonctionne pour le cmd prompt de windows
-
+        if os.name == 'nt':
+            os.system("dot -Tpdf tmp.dot -o tmp.pdf")
+            os.system("START tmp.pdf") # fonctionne pour le cmd prompt de windows
+        else:
+            print("zizi")
+            os.system("dot -Tpdf tmp.dot -o tmp.pdf")
+            os.system("firefox tmp.pdf")
 
     def copy(self):
         '''return a copy of the graph'''
         return open_digraph(self.inputs.copy(), self.outputs.copy(), [n.copy() for n in self.nodes.values()])
 
-
-
-
+    def is_cyclic(self):
+        if self.get_node_ids() == []:
+            return False
+        c = None
+        noeud_trouver = False
+        for node in self.get_nodes():
+            if node.get_children_ids() == [] and len(node.get_parent_ids()) > 0:
+                c = node
+        if not noeud_trouver:
+            return True
+        return self.copy().remove_node_by_id(c.get_id()).is_cyclic()
+        
 
 
 def graph_from_adjacency_matrix(mat):
