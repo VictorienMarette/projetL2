@@ -5,7 +5,7 @@ import inspect
 
 #TD1
 
-myGraph = open_digraph([0], [2], [node(0, 'i0', {}, {2:1}), node(2, 's', {0:1}, {})])
+"""myGraph = open_digraph([0], [2], [node(0, 'i0', {}, {2:1}), node(2, 's', {0:1}, {})])
 # print(myGraph) il ne se passe rien
 n = node(0, 'i0', {}, {2:1})
 
@@ -26,7 +26,7 @@ graph = graph_from_adjacency_matrix(mat)
 print(graph)
 
 g = open_digraph.random(5, 3, inputs=2, outputs=1, form='undirected')
-print(g)
+print(g)"""
 
 circ = bool_circ(open_digraph([0, 1, 2], [8], [node(0, 'x1', {}, {3:1}),
                              node(1, 'x2', {}, {4:1}),
@@ -39,8 +39,8 @@ circ = bool_circ(open_digraph([0, 1, 2], [8], [node(0, 'x1', {}, {3:1}),
                              node(8, 'out', {7:1}, {})]))
 
 print(circ.is_cyclic())
-print(circ.is_well_formed())
-circ.display()
+#circ.display()
+"""circ.display()
 
 d5 = open_digraph([0, 1], [4], [
                     node(0, 'i0', {}, {2:1}),
@@ -51,4 +51,4 @@ d5 = open_digraph([0, 1], [4], [
                     node(4, 'o4', {5: 1}, {})]
                     )
 d5.save_as_dot_file("test.dot")
-r = from_dot_file("test.dot")
+r = from_dot_file("test.dot")"""

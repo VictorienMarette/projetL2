@@ -281,6 +281,7 @@ class open_digraph: # for open directed graph
             self.remove_parallel_edges(id, children)
         for parent in parents:
             self.remove_parallel_edges(parent, id)
+        self.nodes.pop(id)
 
     def remove_nodes_by_id(self, listOfId):
         '''
@@ -509,25 +510,27 @@ class open_digraph: # for open directed graph
             os.system("dot -Tpdf tmp_files/tmp.dot -o tmp_files/tmp.pdf")
             os.system("START tmp_files/tmp.pdf") # fonctionne pour le cmd prompt de windows
         else:
-            print("zizi")
-            os.system("dot -Tpdf tmp.dot -o tmp.pdf")
-            os.system("firefox tmp.pdf")
+            os.system("dot -Tpdf tmp_files/tmp.dot -o tmp_files/tmp.pdf")
+            os.system("firefox tmp_files/tmp.pdf")
 
     def copy(self):
         '''return a copy of the graph'''
         return open_digraph(self.inputs.copy(), self.outputs.copy(), [n.copy() for n in self.nodes.values()])
 
     def is_cyclic(self):
-        if self.get_node_ids() == []:
+        b = self.copy()
+        b.outputs = []
+        b.inputs = []
+        b.display()
+        if b.get_node_ids() == []:
             return False
-        c = None
-        noeud_trouver = False
-        for node in self.get_nodes():
-            if node.get_children_ids() == [] and len(node.get_parent_ids()) > 0:
-                c = node
-        if not noeud_trouver:
-            return True
-        return self.copy().remove_node_by_id(c.get_id()).is_cyclic()
+        for node in b.get_nodes():
+            if node.get_children_ids() == []: #and len(node.get_parent_ids()) > 0
+                a = b.copy()
+                a.remove_node_by_id(node.get_id())
+                return a.is_cyclic()
+
+        return True
         
 
 
