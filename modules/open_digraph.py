@@ -566,11 +566,9 @@ class open_digraph: # for open directed graph
         self.nodes.update(g.nodes)
 
     def parallel(self,g):
-        b = g.copy()
-        b.shift_indices(self.max_id() + 1)
-        self.outputs.extand(g.outputs)
-        self.inputs.extand(g.inputs)
-        self.nodes.update(g.nodes)
+        a = self.copy()
+        a.iparallel(g)
+        return a
 
 def graph_from_adjacency_matrix(mat):
     '''
