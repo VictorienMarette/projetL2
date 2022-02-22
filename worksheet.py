@@ -1,3 +1,4 @@
+from sympy import true
 from modules.open_digraph import *
 from modules.matrice import *
 from modules.bool_circ import *
@@ -38,7 +39,16 @@ circ = bool_circ(open_digraph([0, 1, 2], [8], [node(0, 'x1', {}, {3:1}),
                              node(7, '|', {3:1, 6:1}, {8:1}),
                              node(8, 'out', {7:1}, {})]))
 
-print(circ.is_cyclic())
+g = open_digraph([0, 1, 2], [8], [node(0, 'x1', {}, {3:1}),
+                             node(1, 'x2', {}, {4:1}),
+                             node(2, 'x3', {}, {5:1}),
+                             node(3, '&', {0:1, 4:1}, {7:1}),
+                             node(4, '', {1:1}, {3:1, 5:1}),
+                             node(5, '|', {2:1, 4:1}, {6:1}),
+                             node(6, '~', {5:1}, {7:1}),
+                             node(7, '|', {3:1, 6:1}, {8:1}),
+                             node(8, 'out', {7:1}, {})])
+#print(circ.is_cyclic())
 #circ.display()
 """circ.display()
 
@@ -52,3 +62,7 @@ d5 = open_digraph([0, 1], [4], [
                     )
 d5.save_as_dot_file("test.dot")
 r = from_dot_file("test.dot")"""
+g.shift_indices(10)
+print(g)
+g.display(verbose=true)
+print(g.is_well_formed())

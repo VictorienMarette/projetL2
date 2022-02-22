@@ -532,7 +532,15 @@ class open_digraph: # for open directed graph
 
         return True
         
-
+    def shift_indices(self, n):
+        for nod in self.get_nodes():
+            nod.parents = incrDictKey(nod.parents, n)
+            nod.children = incrDictKey(nod.children, n)
+            nod.id += n
+        self.nodes = incrDictKey(self.nodes, n)
+        self.lastNewId += n
+        self.inputs = list(map(lambda x: x + n, self.inputs))
+        self.outputs = list(map(lambda x: x + n, self.outputs))
 
 def graph_from_adjacency_matrix(mat):
     '''
@@ -590,3 +598,7 @@ def from_dot_file(path, nombre_espace_tab=4):
                 nl = nl[1:]
             
     return open_digraph([],[],nodes.values())
+
+def incrDictKey(dic, n):
+    '''add n to every khey in the dic'''
+    return {i + n: dic[i] for i in dic}
