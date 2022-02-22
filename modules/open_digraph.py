@@ -531,6 +531,36 @@ class open_digraph: # for open directed graph
                 return a.is_cyclic()
 
         return True
+
+    def max_id(self):
+        max = -1
+        for i in self.get_node_ids():
+            if i > max:
+                max = i
+        return max
+        
+    def min_id(self):
+        if self.get_node_ids() == 0:
+            return -1
+        min = self.get_node_ids()[0]
+        for i in self.get_node_ids():
+            if i < min:
+                max = i
+        return min
+
+    def iparallel(self,g):
+        b = g.copy()
+        b.shift_indices(self.max_id() + 1)
+        self.outputs.extand(g.outputs)
+        self.inputs.extand(g.inputs)
+        self.nodes.update(g.nodes)
+
+    def parallel(self,g):
+        b = g.copy()
+        b.shift_indices(self.max_id() + 1)
+        self.outputs.extand(g.outputs)
+        self.inputs.extand(g.inputs)
+        self.nodes.update(g.nodes)
         
 
 

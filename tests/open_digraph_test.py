@@ -219,6 +219,10 @@ class OpenDigraphTest(unittest.TestCase):
         self.assertTrue(self.d5.is_cyclic())
         self.assertTrue(self.d4.is_cyclic())
 
+    def test_max_min_id(self):
+        self.assertEqual(self.d1.max_id(), 2)
+        self.assertEqual(self.d1.min_id(), 0)
+
         
 class matriceTest(unittest.TestCase):
     def setUp(self):
