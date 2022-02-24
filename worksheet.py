@@ -61,7 +61,10 @@ d5 = open_digraph([0, 1], [4], [
                     )
 d5.save_as_dot_file("test.dot")
 r = from_dot_file("test.dot")"""
-g.shift_indices(10)
-print(g)
-g.display(verbose=true)
-print(g.is_well_formed())
+
+#circ.display()
+#g.display()
+a = g.parallel(circ)
+a.display()
+g.iparallel(circ)
+g.display()

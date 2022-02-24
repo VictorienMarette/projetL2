@@ -521,7 +521,6 @@ class open_digraph: # for open directed graph
         b = self.copy()
         b.outputs = []
         b.inputs = []
-        b.display()
         if b.get_node_ids() == []:
             return False
         for node in b.get_nodes():
@@ -561,14 +560,28 @@ class open_digraph: # for open directed graph
     def iparallel(self,g):
         b = g.copy()
         b.shift_indices(self.max_id() + 1)
-        self.outputs.extand(g.outputs)
-        self.inputs.extand(g.inputs)
-        self.nodes.update(g.nodes)
+        self.outputs.extend(b.outputs)
+        self.inputs.extend(b.inputs)
+        self.nodes.update(b.nodes)
 
     def parallel(self,g):
         a = self.copy()
         a.iparallel(g)
-        return a
+        return a  
+
+    """def icompose(self, g):
+        '''
+        le transform en la composer avec g
+        fait f = gof
+        les noeuds de sortie de f et ceux d entrer de g fusionne
+        '''
+        if len(self.get_input_ids()) != len(g.get_input_ids()):
+            raise Exception("f n as pas autant de sortie que g a d entrée")
+        b = g.copy()
+        b.shift_indices(self.max_id() + 1)
+        self.nodes.update(b.nodes)
+        self.inputs = b.get_input_ids()"""
+
 
 def graph_from_adjacency_matrix(mat):
     '''
