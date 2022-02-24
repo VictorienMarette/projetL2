@@ -577,6 +577,8 @@ class open_digraph: # for open directed graph
         '''
         if len(self.get_input_ids()) != len(g.get_input_ids()):
             raise Exception("f n as pas autant de sortie que g a d entrée")
+        for i in range(len(self.get_input_ids())):
+            self.get_node_by_id(self.get_input_ids()[i]).add_child_id()
         b = g.copy()
         b.shift_indices(self.max_id() + 1)
         self.nodes.update(b.nodes)
