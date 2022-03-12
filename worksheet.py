@@ -38,7 +38,7 @@ circ = bool_circ(open_digraph([0, 1, 2], [8], [node(0, 'x1', {}, {3:1}),
                              node(7, '|', {3:1, 6:1}, {8:1}),
                              node(8, 'out', {7:1}, {})]))
 
-g = open_digraph([0, 1, 2], [8], [node(0, 'x1', {}, {3:1}),
+g = open_digraph([0,1,2], [8], [node(0, 'x1', {}, {3:1}),
                              node(1, 'x2', {}, {4:1}),
                              node(2, 'x3', {}, {5:1}),
                              node(3, '&', {0:1, 4:1}, {7:1}),
@@ -64,7 +64,11 @@ r = from_dot_file("test.dot")"""
 
 #circ.display()
 #g.display()
-a = g.parallel(circ)
-a.display()
-g.iparallel(circ)
-g.display()
+a = g.copy()
+a.iparallel(g)
+#a.display(verbose=True)
+n ,dic = a.connected_components()
+l = a.get_connected_components()
+l[0].display()
+l[1].display()
+print(len(l))
