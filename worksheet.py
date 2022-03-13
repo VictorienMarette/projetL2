@@ -1,3 +1,4 @@
+from lib2to3.pytree import Node
 from modules.open_digraph import *
 from modules.matrice import *
 from modules.bool_circ import *
@@ -28,7 +29,7 @@ print(graph)
 g = open_digraph.random(5, 3, inputs=2, outputs=1, form='undirected')
 print(g)"""
 
-circ = bool_circ(open_digraph([0, 1, 2], [8], [node(0, 'x1', {}, {3:1}),
+"""circ = bool_circ(open_digraph([0, 1, 2], [8], [node(0, 'x1', {}, {3:1}),
                              node(1, 'x2', {}, {4:1}),
                              node(2, 'x3', {}, {5:1}),
                              node(3, '&', {0:1, 4:1}, {7:1}),
@@ -36,7 +37,7 @@ circ = bool_circ(open_digraph([0, 1, 2], [8], [node(0, 'x1', {}, {3:1}),
                              node(5, '|', {2:1, 4:1}, {6:1}),
                              node(6, '~', {5:1}, {7:1}),
                              node(7, '|', {3:1, 6:1}, {8:1}),
-                             node(8, 'out', {7:1}, {})]))
+                             node(8, 'out', {7:1}, {})]))"""
 
 g = open_digraph([0,1,2], [8], [node(0, 'x1', {}, {3:1}),
                              node(1, 'x2', {}, {4:1}),
@@ -67,8 +68,7 @@ r = from_dot_file("test.dot")"""
 a = g.copy()
 a.iparallel(g)
 #a.display(verbose=True)
-n ,dic = a.connected_components()
+#n ,dic = a.connected_components()
 l = a.get_connected_components()
-l[0].display()
-l[1].display()
-print(len(l))
+print(l[0])
+print(l[1])

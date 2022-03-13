@@ -215,13 +215,26 @@ class OpenDigraphTest(unittest.TestCase):
         self.assertEqual(self.d1.get_node_by_id(1).children[4], 1)
         self.assertTrue(self.d1.is_well_formed())
 
-    def test_is_well_formed(self):
+    def test_is_cyclic(self):
         self.assertTrue(self.d5.is_cyclic())
-        self.assertTrue(self.d4.is_cyclic())
+        self.assertFalse(self.d4.is_cyclic())
 
     def test_max_min_id(self):
         self.assertEqual(self.d1.max_id(), 2)
         self.assertEqual(self.d1.min_id(), 0)
+    
+    def test_paralle_get_connected_components(self):
+        a = self.d2.copy()
+        b = self.d2.copy()
+        c = self.d2.copy()
+        d = self.d2.parallel([a,b,c])
+        n, dic = d.connected_components()
+        self.assertEqual(n,4)
+        l = d.get_connected_components()
+        for i in range(4):
+            self.assertEqual(len(l[i].get_node_ids()),5)
+            self.assertEqual(len(l[i].inputs),2)
+            self.assertEqual(len(l[i].outputs),1)
 
         
 class matriceTest(unittest.TestCase):
