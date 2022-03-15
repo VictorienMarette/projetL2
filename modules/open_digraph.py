@@ -532,6 +532,9 @@ class open_digraph: # for open directed graph
         return True
 
     def max_id(self):
+        """
+        return minimal id from the graph
+        """
         max = -1
         for i in self.get_node_ids():
             if i > max:
@@ -539,15 +542,21 @@ class open_digraph: # for open directed graph
         return max
         
     def min_id(self):
-        if self.get_node_ids() == 0:
+        """
+        return maximal id from the graph
+        """
+        if self.get_node_ids() == []:
             return -1
         min = self.get_node_ids()[0]
         for i in self.get_node_ids():
             if i < min:
-                max = i
+                min = i
         return min
 
     def shift_indices(self, n):
+        """
+        add n to every khey in the graph
+        """
         for nod in self.get_nodes():
             nod.parents = incrDictKey(nod.parents, n)
             nod.children = incrDictKey(nod.children, n)
@@ -558,6 +567,10 @@ class open_digraph: # for open directed graph
         self.outputs = list(map(lambda x: x + n, self.outputs))
 
     def iparallel(self,l):
+        """
+        add g to self. self is modified, not g in l .
+        l : list of open_digraph
+        """
         def sub_iparallel(g):
             b = g.copy()
             b.shift_indices(self.max_id() + 1)
@@ -569,17 +582,22 @@ class open_digraph: # for open directed graph
 
             
     def parallel(self,l):
+        """
+        add parallel composition g to self. neither self and l are modified.
+        """
         a = self.copy()
         a.iparallel(l)
         return a  
 
     def icompose(self, g):
         '''
-        le transform en la composer avec g
+        le transforme en la composee avec g
         fait f = gof
         les noeuds de sortie de f et ceux d entrer de g fusionne
         '''
-        if len(self.get_input_ids()) != len(g.get_input_ids()):
+        print(self.get_input_ids())
+        print(g.get_output_ids())
+        if len(self.get_output_ids()) != len(g.get_input_ids()):
             raise Exception("f n as pas autant de sortie que g a d entrée")
         b = g.copy()
         b.shift_indices(self.max_id() + 1)

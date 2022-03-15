@@ -222,6 +222,23 @@ class OpenDigraphTest(unittest.TestCase):
     def test_max_min_id(self):
         self.assertEqual(self.d1.max_id(), 2)
         self.assertEqual(self.d1.min_id(), 0)
+
+    def test_shift_indice(self):
+        self.assertTrue(self.d1.is_well_formed())
+        self.d1.shift_indices(3)
+        self.assertEqual(self.d1.get_input_ids(), [3])
+        self.assertEqual(self.d1.get_output_ids(), [5])
+        self.assertEqual(sorted(self.d1.get_node_ids()), [3, 4, 5])
+        self.assertEqual(self.d1.get_node_by_id(4).children, {5:1})
+        self.assertEqual(self.d1.get_node_by_id(4).parents, {3:1})
+        self.assertTrue(self.d1.is_well_formed())
+
+    def test_iparallele(self):
+        self.d1.iparallel([self.d1])
+        self.assertEqual(self.d1.get_input_ids(), [0, 3])
+        self.assertEqual(self.d1.get_output_ids(), [2, 5])
+        self.assertEqual(sorted(self.d1.get_node_ids()), [0, 1, 2, 3, 4, 5])
+        self.assertTrue(self.d1.is_well_formed())
     
     def test_paralle_get_connected_components(self):
         a = self.d2.copy()
@@ -273,8 +290,8 @@ class bool_circTest(unittest.TestCase):
                              node(4, '', {1:1}, {3:1, 5:1}),
                              node(5, '|', {2:1, 4:1}, {6:1}),
                              node(6, '~', {5:1}, {7:1}),
-                             node(7, '|', {3:1, 5:1}, {8:1}),
-                             node(8, 'out', {6:1}, {})]))
+                             node(7, '|', {3:1, 6:1}, {8:1}),
+                             node(8, 'out', {7:1}, {})]))
 
         self.d3 = bool_circ(open_digraph([0, 1], [4], [
                     node(0, 'i0', {}, {2:1}),
