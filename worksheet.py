@@ -1,3 +1,4 @@
+from sympy import true
 from modules.open_digraph import *
 from modules.matrice import *
 from modules.bool_circ import *
@@ -63,5 +64,5 @@ d5.save_as_dot_file("test.dot")
 r = from_dot_file("test.dot")"""
 g.shift_indices(10)
 print(g)
-g.display(verbose=true)
+g.display(verbose=True)
 print(g.is_well_formed())
