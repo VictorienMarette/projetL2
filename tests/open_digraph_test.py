@@ -253,6 +253,9 @@ class OpenDigraphTest(unittest.TestCase):
             self.assertEqual(len(l[i].inputs),2)
             self.assertEqual(len(l[i].outputs),1)
 
+    def test_tri_topologique(self):
+        self.assertEqual(self.d4.tri_topologique(), [[0,1],[2],[3],[5], [4]])
+
         
 class matriceTest(unittest.TestCase):
     def setUp(self):

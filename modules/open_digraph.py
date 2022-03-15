@@ -666,7 +666,78 @@ class open_digraph: # for open directed graph
                 l[dic[id]].get_output_ids().append(id)
             if id in self.get_input_ids():
                 l[dic[id]].get_input_ids().append(id)
-        return l
+        return l 
+
+    """def chemin_plus_cours_ancetre_commun(self, id1, id2):
+        a = self.Dijkstra(id1)
+        b = self.Dijkstra(id2)
+        dict = {}
+        for id in self.get_node_ids():
+            if id in a and id in b:
+                dict[id] = (a[id], b[id])"""
+
+    def tri_topologique(self):
+        def sub_tri_topologique(a, l):
+            if a.get_node_ids() == []:
+                return l
+            l2 = []
+            for id in a.get_node_ids():
+                if a.get_node_by_id(id).get_parent_ids() == []:
+                    l2.append(id)
+            
+            if l2 == []:
+                raise Exception("self est cyclique")
+
+            a.remove_nodes_by_id(l2)
+            return sub_tri_topologique(a, l.append(l2))
+        return sub_tri_topologique(self.copy(), [])
+
+    def profondeur_noeud(self, id):
+        l = self.tri_topologique()
+        for i in range(len(l)):
+            if id in l[i]:
+                return i
+
+    def profondeur_graph(self):
+        return len(self.tri_topologique()) - 1
+
+    def distances_longueur_la_plus(self, id1, id2):
+        l = self.tri_topologique()
+        n = 0
+        for i in range(len(l)):
+            if id1 in l[i]:
+                n = i
+                break
+
+        dis = {id1:0}
+        prev = {}
+        for i in range(n+1, len(l)):
+            if id2 in l[i]:
+                break
+            for id in l[i]:
+                max = -1
+                idmax = -1
+                for id_parent in self.get_node_by_id(id).get_parents_id():
+                    if id_parent in dis:
+                        if dis[id_parent] > max:
+                            max = dis[id_parent]
+                            idmax = id_parent
+                if max != -1:
+                    dis[id] = max+1
+                    prev[id] = idmax
+        
+        max = -1
+        l = [id2]
+        for id_parent in self.get_node_by_id(id2).get_parents_id():
+            if id_parent in dis:
+                if dis[id_parent] > max:
+                    max = dis[id_parent]
+                    l = [id_parent]+l
+
+        while (l[0] != id1):
+            l = [prev[l[0]]] + l
+        
+        return l, max+1
 
 
 def graph_from_adjacency_matrix(mat):
