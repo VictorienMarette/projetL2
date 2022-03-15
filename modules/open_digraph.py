@@ -106,7 +106,7 @@ class node:
         return id in self.parents
 
     def __str__(self):
-         return self.label + " " + str(self.id) + " " + str(self.parents) + " " + str(self.children)
+        return self.label + " " + str(self.id) + " " + str(self.parents) + " " + str(self.children)
 
     def __repr__(self):
         return str(self)
@@ -521,7 +521,6 @@ class open_digraph: # for open directed graph
         b = self.copy()
         b.outputs = []
         b.inputs = []
-        b.display()
         if b.get_node_ids() == []:
             return False
         for node in b.get_nodes():
@@ -558,17 +557,99 @@ class open_digraph: # for open directed graph
         self.inputs = list(map(lambda x: x + n, self.inputs))
         self.outputs = list(map(lambda x: x + n, self.outputs))
 
-    def iparallel(self,g):
+    def iparallel(self,l):
+        def sub_iparallel(g):
+            b = g.copy()
+            b.shift_indices(self.max_id() + 1)
+            self.outputs.extend(b.outputs)
+            self.inputs.extend(b.inputs)
+            self.nodes.update(b.nodes)
+        for g in l:
+            sub_iparallel(g)
+
+            
+    def parallel(self,l):
+        a = self.copy()
+        a.iparallel(l)
+        return a  
+
+    def icompose(self, g):
+        '''
+        le transform en la composer avec g
+        fait f = gof
+        les noeuds de sortie de f et ceux d entrer de g fusionne
+        '''
+        if len(self.get_input_ids()) != len(g.get_input_ids()):
+            raise Exception("f n as pas autant de sortie que g a d entrée")
         b = g.copy()
         b.shift_indices(self.max_id() + 1)
-        self.outputs.extand(g.outputs)
-        self.inputs.extand(g.inputs)
-        self.nodes.update(g.nodes)
+        for i in range(len(self.get_input_ids())):
+            print(b.get_output_ids()[i])
+            self.get_node_by_id(self.get_input_ids()[i]).add_parent_id(b.get_output_ids()[i])
+            b.get_node_by_id(b.get_output_ids()[i]).add_child_id(self.get_input_ids()[i])
+        self.nodes.update(b.nodes)
+        self.inputs = b.get_input_ids()
 
-    def parallel(self,g):
-        a = self.copy()
-        a.iparallel(g)
-        return a
+
+    def compose(self, g):
+        b = self.copy()
+        return b.icompose(g) 
+
+    '''l idee c qu on parcours une fois le graph pr chaque input 
+    on note chaque noeud avec la place du input dans la liste
+    si un noeud a deja une valeur dans le dict on join les deux valeurs ensemble 
+    avec la plus petite valeur
+    '''
+    def connected_components(self):
+        '''
+        envoie le nombre de composantes connexes, et un dictionnaire
+        qui associe `a chaque id de noeuds du graphe un int qui correspond `a une
+        composante connexe
+        '''
+        dic = {}
+
+        def parcours(noeud, i):
+            if noeud.get_id() in dic:
+                if dic[noeud.get_id()] != i:
+                    j = dic[noeud.get_id()]
+                    for id in dic:
+                        if dic[id] == i:
+                            dic[id] = j
+                    i = j
+            else:
+                dic[noeud.get_id()] = i
+            for id in noeud.get_children_ids():
+                parcours(self.get_node_by_id(id), i)
+
+        for i in range(len(self.get_input_ids())):
+            #permet d avoir le plus petit indice possible
+            index_sub_graph = 0
+            for j in range(i):
+                if dic[self.get_input_ids()[j]] >= index_sub_graph:
+                    index_sub_graph = dic[self.get_input_ids()[j]] +1
+            parcours(self.get_node_by_id(self.get_input_ids()[i]), index_sub_graph)
+
+        if dic == {}:
+            return 0, {}
+        #max([dic[id] for id in self.get_input_ids()]) + 1  est le nombre de sous graphs
+        return max([dic[id] for id in self.get_input_ids()]) + 1 , dic
+
+    def get_connected_components(self):
+        '''
+        qui renvoie une
+        liste d open_digraphs, chacun correspondant `a une composante connexe du
+        graphe de d ́epart
+        '''
+        n, dic = self.connected_components()
+        l = [open_digraph([],[],[]) for i in range(n)]
+        for id in dic:
+            l[dic[id]].nodes.update({id:self.get_node_by_id(id)})
+            if id in self.get_output_ids():
+                l[dic[id]].get_output_ids().append(id)
+            if id in self.get_input_ids():
+                l[dic[id]].get_input_ids().append(id)
+        return l
+
 
 def graph_from_adjacency_matrix(mat):
     '''
