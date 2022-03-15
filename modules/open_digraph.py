@@ -234,11 +234,6 @@ class open_digraph: # for open directed graph
         #l'edge est enlevé
         self.get_node_by_id(src).remove_child_once(tgt)
         self.get_node_by_id(tgt).remove_parent_once(src)
-        #on regarde si l'edge existe encore
-        if src in self.get_input_ids() and len(self.get_node_by_id(src).get_children_ids()) != 1:
-            raise Exception("Le noeud " + str(src) + " est un inputs mais n'a pas un unique enfant")
-        if tgt in self.get_output_ids() and len(self.get_node_by_id(tgt).get_parent_ids()) != 1:
-            raise Exception("Le noeud " + str(src) + " est un output mais n'a pas un unique parent")
 
     def remove_edges(self, list):
         '''
@@ -253,11 +248,6 @@ class open_digraph: # for open directed graph
         #les edges sont enlevé
         self.get_node_by_id(src).remove_child_id(tgt)
         self.get_node_by_id(tgt).remove_parent_id(src)
-        #on regarde si l'edge existe encore
-        if src in self.get_input_ids() and len(self.get_node_by_id(src).get_children_ids()) != 1:
-            raise Exception("Le noeud " + str(src) + " est un inputs mais n'a pas un unique enfant")
-        if tgt in self.get_output_ids() and len(self.get_node_by_id(tgt).get_parent_ids()) != 1:
-            raise Exception("Le noeud " + str(src) + " est un output mais n'a pas un unique parent")
 
     def remove_parallel_edges_2(self, list):
         '''
@@ -668,13 +658,13 @@ class open_digraph: # for open directed graph
                 l[dic[id]].get_input_ids().append(id)
         return l 
 
-    """def chemin_plus_cours_ancetre_commun(self, id1, id2):
+    def chemin_plus_cours_ancetre_commun(self, id1, id2):
         a = self.Dijkstra(id1)
         b = self.Dijkstra(id2)
         dict = {}
         for id in self.get_node_ids():
             if id in a and id in b:
-                dict[id] = (a[id], b[id])"""
+                dict[id] = (a[id], b[id])
 
     def tri_topologique(self):
         def sub_tri_topologique(a, l):
@@ -689,7 +679,8 @@ class open_digraph: # for open directed graph
                 raise Exception("self est cyclique")
 
             a.remove_nodes_by_id(l2)
-            return sub_tri_topologique(a, l.append(l2))
+            l.append(l2)
+            return sub_tri_topologique(a, l)
         return sub_tri_topologique(self.copy(), [])
 
     def profondeur_noeud(self, id):
