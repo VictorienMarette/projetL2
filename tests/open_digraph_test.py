@@ -126,6 +126,17 @@ class OpenDigraphTest(unittest.TestCase):
                     node(5, 'tintin', {0: 1}, {})]
                     )
 
+        self.g = open_digraph([0,1,2], [8], [
+                    node(0, 'x1', {}, {3:1}),
+                    node(1, 'x2', {}, {4:1}),
+                    node(2, 'x3', {}, {5:1}),
+                    node(3, '&', {0:1, 4:1}, {7:1}),
+                    node(4, '', {1:1}, {3:1, 5:1}),
+                    node(5, '|', {2:1, 4:1}, {6:1}),
+                    node(6, '~', {5:1}, {7:1}),
+                    node(7, '|', {3:1, 6:1}, {8:1}),
+                    node(8, 'out', {7:1}, {})])
+
     # Tests des getters
     def test_get_inputs(self):
         self.assertEqual(self.d0.get_input_ids(), [0])
@@ -256,6 +267,36 @@ class OpenDigraphTest(unittest.TestCase):
     def test_tri_topologique(self):
         self.assertEqual(self.d4.tri_topologique(), [[0,1],[2],[3],[5], [4]])
 
+    def test_Dijkstra(self):
+        d, p = self.g.Dijkstra(4)
+        self.assertEqual(d[4], 0)
+        self.assertEqual(d[3], 1)
+        self.assertEqual(d[0], 2)
+        self.assertEqual(d[8], 3)
+        self.assertEqual(d[7], 2)
+        self.assertEqual(p[3], 4)
+        self.assertEqual(p[0], 3)
+        self.assertEqual(p[8], 7)
+        self.assertEqual(p[7], 3)
+        d, p = self.g.Dijkstra(4, direction=1)
+        self.assertFalse(0 in d)
+        self.assertFalse(1 in d)
+        self.assertFalse(1 in p)
+        self.assertFalse(2 in p)
+        self.assertEqual(d[8], 3)
+        self.assertEqual(p[7], 3)
+        d, p = self.g.Dijkstra(6, direction=-1)
+        self.assertFalse(7 in d)
+        self.assertTrue(5 in d)
+        self.assertFalse(8 in p)
+        self.assertEqual(d[1], 3)
+        self.assertEqual(p[2], 5)
+
+    def test_shortest_Path(self):
+        p = self.g.shortest_path(1, 8)
+        self.assertEqual(p, [1, 4, 3, 7, 8])
+        p = self.g.shortest_path(8, 2)
+        self.assertEqual(p, [8, 7, 6, 5, 2])
         
 class matriceTest(unittest.TestCase):
     def setUp(self):

@@ -739,6 +739,51 @@ class open_digraph: # for open directed graph
         
         return l, max+1
 
+    def Dijkstra(self, src, direction=None, tgt=None):
+        """
+        Apply the Dijkstera algorithm to the node src
+        src : node id (int)
+        direction : None (child and parents) or -1 (only parents) or 1 (only children)
+        tgt : utility parameter only used for shortest_path, do not use !
+        """
+        Q = [src]
+        dist = {src:0}
+        prev = {}
+        while(Q != []):
+            u = min(Q, key=lambda v:dist[v])
+            Q.remove(u)
+            if u == tgt:
+                return dist, prev
+            neighbours = []
+            if direction == None or direction == -1: # on cherche dans les parents
+                neighbours += self.get_node_by_id(u).get_parent_ids()
+            if direction == None or direction == 1: # on cherche dans les enfants
+                neighbours += self.get_node_by_id(u).get_children_ids()
+            for v in neighbours:
+                if not v in dist:
+                    Q += [v]
+                if not v in dist or dist[u] > dist[u] + 1:
+                    dist.update({v:dist[u] + 1})
+                    prev.update({v:u})
+        return dist, prev
+
+    def shortest_path(self, src, tgt):
+        """
+        Find the shortest_path between src ang tgt
+        src : id of the source node
+        tgt : id of the target node
+        return : list [src, x1, ..., xn, tgt]
+        """
+        d, p = self.Dijkstra(src, tgt=tgt)
+        res = [tgt]
+        i = tgt
+        while(i != src):
+            res = [p[i]] + res
+            i = p[i]
+        return res
+
+
+
 
 def graph_from_adjacency_matrix(mat):
     '''
