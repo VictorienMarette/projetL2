@@ -74,7 +74,7 @@ g.shift_indices(10)
 print(g)
 g.display(verbose=True)
 print(g.is_well_formed())
-"""
+
 
 #circ.display()
 #g.display()
@@ -86,3 +86,5 @@ print(a)
 l = a.get_connected_components()
 print(l[0])
 print(l[1])
+"""
+print(g.shortest_path(1, 8))
