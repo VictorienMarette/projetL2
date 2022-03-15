@@ -656,7 +656,7 @@ class open_digraph: # for open directed graph
         '''
         qui renvoie une
         liste d open_digraphs, chacun correspondant `a une composante connexe du
-        graphe de d ́epart
+        graphe de depart
         '''
         n, dic = self.connected_components()
         l = [open_digraph([],[],[]) for i in range(n)]
