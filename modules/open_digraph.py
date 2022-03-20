@@ -659,14 +659,24 @@ class open_digraph: # for open directed graph
         return l 
 
     def chemin_plus_cours_ancetre_commun(self, id1, id2):
-        a = self.Dijkstra(id1)
-        b = self.Dijkstra(id2)
+        """
+        Trouve la plus petite longueur entre id1 et id2 et chaque
+        ancetre commun a ces deux noeuds
+        id1, id2 : int nodes id
+        return : dict{ancetres: (longueur id1, longueur id2)}
+        """
+        a, aUseless = self.Dijkstra(id1, direction=-1)
+        b, bUseless = self.Dijkstra(id2, direction=-1)
         dict = {}
         for id in self.get_node_ids():
             if id in a and id in b:
                 dict[id] = (a[id], b[id])
+        return dict
 
     def tri_topologique(self):
+        """
+        realise le tri topologique compresse vers le haut du graphe
+        """
         def sub_tri_topologique(a, l):
             if a.get_node_ids() == []:
                 return l
@@ -684,15 +694,24 @@ class open_digraph: # for open directed graph
         return sub_tri_topologique(self.copy(), [])
 
     def profondeur_noeud(self, id):
+        """
+        Donne la profondeur du noeud id en se servant du tri topologique
+        """
         l = self.tri_topologique()
         for i in range(len(l)):
             if id in l[i]:
                 return i
 
     def profondeur_graph(self):
+        """
+        Donne la profondeur du graphe en se servant du tri topologique
+        """
         return len(self.tri_topologique()) - 1
 
     def distances_longueur_la_plus(self, id1, id2):
+        """
+        Renvoi la plus grande distance entre les noeuds id1 et id2
+        """
         l = self.tri_topologique()
         n = 0
         for i in range(len(l)):
@@ -708,7 +727,7 @@ class open_digraph: # for open directed graph
             for id in l[i]:
                 max = -1
                 idmax = -1
-                for id_parent in self.get_node_by_id(id).get_parents_id():
+                for id_parent in self.get_node_by_id(id).get_parent_ids():
                     if id_parent in dis:
                         if dis[id_parent] > max:
                             max = dis[id_parent]
@@ -719,7 +738,7 @@ class open_digraph: # for open directed graph
         
         max = -1
         l = [id2]
-        for id_parent in self.get_node_by_id(id2).get_parents_id():
+        for id_parent in self.get_node_by_id(id2).get_parent_ids():
             if id_parent in dis:
                 if dis[id_parent] > max:
                     max = dis[id_parent]
@@ -756,6 +775,8 @@ class open_digraph: # for open directed graph
                 if not v in dist or dist[u] > dist[u] + 1:
                     dist.update({v:dist[u] + 1})
                     prev.update({v:u})
+        if(direction != None):
+            del dist[src]
         return dist, prev
 
     def shortest_path(self, src, tgt):

@@ -264,9 +264,6 @@ class OpenDigraphTest(unittest.TestCase):
             self.assertEqual(len(l[i].inputs),2)
             self.assertEqual(len(l[i].outputs),1)
 
-    def test_tri_topologique(self):
-        self.assertEqual(self.d4.tri_topologique(), [[0,1],[2],[3],[5], [4]])
-
     def test_Dijkstra(self):
         d, p = self.g.Dijkstra(4)
         self.assertEqual(d[4], 0)
@@ -285,18 +282,44 @@ class OpenDigraphTest(unittest.TestCase):
         self.assertFalse(2 in p)
         self.assertEqual(d[8], 3)
         self.assertEqual(p[7], 3)
+        self.assertFalse(4 in p)
+        self.assertFalse(4 in d)
         d, p = self.g.Dijkstra(6, direction=-1)
         self.assertFalse(7 in d)
         self.assertTrue(5 in d)
         self.assertFalse(8 in p)
         self.assertEqual(d[1], 3)
         self.assertEqual(p[2], 5)
+        self.assertFalse(6 in p)
+        self.assertFalse(6 in d)
 
     def test_shortest_Path(self):
         p = self.g.shortest_path(1, 8)
         self.assertEqual(p, [1, 4, 3, 7, 8])
         p = self.g.shortest_path(8, 2)
         self.assertEqual(p, [8, 7, 6, 5, 2])
+
+    def test_chemin_plus_cours_ancetre_commun(self):
+        p = self.g.chemin_plus_cours_ancetre_commun(6, 3)
+        self.assertEqual(p[1], (3, 2))
+        self.assertEqual(p[4], (2, 1))
+        self.assertEqual(len(p), 2)
+        p = self.g.chemin_plus_cours_ancetre_commun(3, 7)
+        self.assertEqual(p[0], (1, 2))
+        self.assertEqual(p[1], (2, 3))
+        self.assertEqual(p[4], (1, 2))
+        self.assertEqual(len(p), 3)
+
+    def test_tri_topologique(self):
+        t = self.d4.tri_topologique()
+        for l in t:
+            l.sort()
+        self.assertEqual(self.d4.tri_topologique(), [[0,1],[2],[3],[5], [4]])
+        t = self.g.tri_topologique()
+        for l in t:
+            l.sort()
+        self.assertEqual(t, [[0, 1, 2], [4], [3, 5], [6], [7], [8]])
+
         
 class matriceTest(unittest.TestCase):
     def setUp(self):

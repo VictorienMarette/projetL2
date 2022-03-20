@@ -87,4 +87,5 @@ l = a.get_connected_components()
 print(l[0])
 print(l[1])
 """
-print(g.shortest_path(1, 8))
+
+print(g.distances_longueur_la_plus(1, 7))
