@@ -708,7 +708,7 @@ class open_digraph: # for open directed graph
         """
         return len(self.tri_topologique()) - 1
 
-    def distances_longueur_la_plus(self, id1, id2):
+    def distances_la_plus_longue(self, id1, id2):
         """
         Renvoi la plus grande distance entre les noeuds id1 et id2
         """
@@ -747,7 +747,7 @@ class open_digraph: # for open directed graph
         while (l[0] != id1):
             l = [prev[l[0]]] + l
         
-        return l, max+1
+        return max+1
 
     def Dijkstra(self, src, direction=None, tgt=None):
         """

@@ -320,6 +320,18 @@ class OpenDigraphTest(unittest.TestCase):
             l.sort()
         self.assertEqual(t, [[0, 1, 2], [4], [3, 5], [6], [7], [8]])
 
+    def test_distances_la_plus_longue(self):
+        d = open_digraph([0, 1], [4], [
+                    node(0, 'i0', {}, {2:1,5:1}),
+                    node(1, 'i1', {}, {2:1}),
+                    node(2, 'n2', {0:1, 1:1}, {3:2}),
+                    node(3, 'n3', {2:2}, {5:1}),
+                    node(5, 'n4', {3:1,0:1}, {4:1}),
+                    node(4, 'o4', {5: 1}, {})]
+                    )
+        self.assertEqual(d.distances_la_plus_longue(0,4), 4)
+        self.assertEqual(d.distances_la_plus_longue(0,5), 3)
+
         
 class matriceTest(unittest.TestCase):
     def setUp(self):
