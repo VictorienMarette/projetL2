@@ -76,19 +76,23 @@ class open_digraph_path_mx:
                 if max != -1:
                     dis[id] = max+1
                     prev[id] = idmax
-        
+
         max = -1
-        l = [id2]
+        idmax = -1
         for id_parent in self.get_node_by_id(id2).get_parent_ids():
             if id_parent in dis:
                 if dis[id_parent] > max:
                     max = dis[id_parent]
-                    l = [id_parent]+l
+                    idmax = id_parent
+        if max != -1:
+            dis[id2] = max+1
+            prev[id2] = idmax
 
+        l = [id2]
         while (l[0] != id1):
             l = [prev[l[0]]] + l
         
-        return max+1, prev
+        return dis[id2]+1, l
 
     def Dijkstra(self, src, direction=None, tgt=None):
         """

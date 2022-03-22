@@ -87,4 +87,5 @@ l = a.get_connected_components()
 print(l[0])
 print(l[1])
 """
+#g.display(verbose=true)
 print(g.distances_la_plus_longue(1, 7))
