@@ -137,6 +137,15 @@ class OpenDigraphTest(unittest.TestCase):
                     node(7, '|', {3:1, 6:1}, {8:1}),
                     node(8, 'out', {7:1}, {})])
 
+        self.d = d = open_digraph([0, 1], [4], [
+                    node(0, 'i0', {}, {2:1,5:1}),
+                    node(1, 'i1', {}, {2:1}),
+                    node(2, 'n2', {0:1, 1:1}, {3:2}),
+                    node(3, 'n3', {2:2}, {5:1}),
+                    node(5, 'n4', {3:1,0:1}, {4:1}),
+                    node(4, 'o4', {5: 1}, {})]
+                    )
+
     # Tests des getters
     def test_get_inputs(self):
         self.assertEqual(self.d0.get_input_ids(), [0])
@@ -342,8 +351,12 @@ class OpenDigraphTest(unittest.TestCase):
                     node(5, 'n4', {3:1,0:1}, {4:1}),
                     node(4, 'o4', {5: 1}, {})]
                     )
-        self.assertEqual(d.distances_la_plus_longue(0,4), (4, [0,2,3,5,4]))
-        self.assertEqual(d.distances_la_plus_longue(0,5), (3,[0,2,3,5]))
+        a, b = self.d.distances_la_plus_longue(0,4)
+        self.assertEqual(a, 4)
+        self.assertEqual(b, [0, 2, 3, 5, 4])
+        a, b = self.d.distances_la_plus_longue(0,5)
+        self.assertEqual(a, 3)
+        self.assertEqual(b, [0, 2, 3, 5])
 
     def test_fusion(self):
         self.d4.fusion_deux_noeud(3,4)
