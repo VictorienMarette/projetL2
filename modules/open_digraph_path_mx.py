@@ -92,7 +92,7 @@ class open_digraph_path_mx:
         while (l[0] != id1):
             l = [prev[l[0]]] + l
         
-        return dis[id2]+1, l
+        return dis[id2], l
 
     def Dijkstra(self, src, direction=None, tgt=None):
         """
