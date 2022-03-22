@@ -342,8 +342,13 @@ class OpenDigraphTest(unittest.TestCase):
                     node(5, 'n4', {3:1,0:1}, {4:1}),
                     node(4, 'o4', {5: 1}, {})]
                     )
-        #self.assertEqual(d.distances_la_plus_longue(0,4), 4)
-        #self.assertEqual(d.distances_la_plus_longue(0,5), 3)
+        self.assertEqual(d.distances_la_plus_longue(0,4), (4, [0,2,3,5,4]))
+        self.assertEqual(d.distances_la_plus_longue(0,5), (3,[0,2,3,5]))
+
+    def test_fusion(self):
+        self.d4.fusion_deux_noeud(3,4)
+        self.assertEqual(self.d4.get_node_by_id(3).parents, {2:2,5: 1})
+        self.assertEqual(self.d4.get_node_by_id(3).children, {5:1})
 
         
 class matriceTest(unittest.TestCase):

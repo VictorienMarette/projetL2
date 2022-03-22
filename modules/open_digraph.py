@@ -410,7 +410,7 @@ class open_digraph(open_digraph_composition_mx, open_digraph_path_mx, open_digra
         return d
 
     def adjacency_matrix(self):
-        '''renvoie une matrice d’adjacence du graphe'''
+        '''renvoie une matrice d adjacence du graphe'''
         l = []
         d = self.random_unique_index()
         for i in range(len(self.get_node_ids())):
@@ -509,6 +509,35 @@ class open_digraph(open_digraph_composition_mx, open_digraph_path_mx, open_digra
             if id in self.get_input_ids():
                 l[dic[id]].get_input_ids().append(id)
         return l 
+
+    def fusion_deux_noeud(self, id1, id2, label = None):
+        '''
+        fusionne deux noeuds dont les id sont donn ́es en param`etres
+        '''
+        parents1 = self.get_node_by_id(id1).parents
+        children1 = self.get_node_by_id(id1).children
+        parents2 = self.get_node_by_id(id2).parents
+        children2 = self.get_node_by_id(id2).children
+        for id in parents2:
+            if id in parents1:
+                n = max(parents1[id], parents2[id])
+            else:
+                n = parents2[id]
+            for i in range(n):
+                self.add_edge(id, id1)
+        
+        for id in children2:
+            if id in children1:
+                n = max(children1[id], children2[id])
+            else:
+                n = children2[id]
+            for i in range(n):
+                self.add_edge(id1, id)
+        
+        if label != None:
+            self.get_node_by_id(id1).label = label
+        self.remove_node_by_id(id2)
+
 
     
 def graph_from_adjacency_matrix(mat):
