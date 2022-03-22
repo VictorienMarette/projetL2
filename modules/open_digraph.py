@@ -710,7 +710,7 @@ class open_digraph: # for open directed graph
 
     def distances_la_plus_longue(self, id1, id2):
         """
-        Renvoi la plus grande distance entre les noeuds id1 et id2
+        Renvoi la plus grande distance et le plus long chemin entre les noeuds id1 et id2
         """
         l = self.tri_topologique()
         n = 0
