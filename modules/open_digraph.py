@@ -499,7 +499,10 @@ class open_digraph(open_digraph_composition_mx, open_digraph_path_mx, open_digra
 
     def fusion_deux_noeud(self, id1, id2, label = None):
         '''
-        fusionne deux noeuds dont les id sont donn ́es en param`etres
+        fusionne deux noeuds dont les id
+        id1 , id2: ids des noeuds
+        label parametre optionnel permet de definir le label de la fusion
+        (le noeud fusione a l id du premier noeud)
         '''
         parents1 = self.get_node_by_id(id1).parents
         children1 = self.get_node_by_id(id1).children
