@@ -87,4 +87,4 @@ l = a.get_connected_components()
 print(l[0])
 print(l[1])
 """
-print(g.distances_la_plus_longue(1, 8))
+print(g.distances_la_plus_longue(1, 7))
