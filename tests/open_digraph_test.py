@@ -343,12 +343,25 @@ class OpenDigraphTest(unittest.TestCase):
 
 
     def test_distances_la_plus_longue(self):
+        d = open_digraph([0, 1], [4], [
+                    node(0, 'i0', {}, {2:1,5:1}),
+                    node(1, 'i1', {}, {2:1}),
+                    node(2, 'n2', {0:1, 1:1}, {3:2}),
+                    node(3, 'n3', {2:2}, {5:1}),
+                    node(5, 'n4', {3:1,0:1}, {4:1}),
+                    node(4, 'o4', {5: 1}, {})]
+                    )
         a, b = self.d.distances_la_plus_longue(0,4)
         self.assertEqual(a, 4)
         self.assertEqual(b, [0, 2, 3, 5, 4])
         a, b = self.d.distances_la_plus_longue(0,5)
         self.assertEqual(a, 3)
         self.assertEqual(b, [0, 2, 3, 5])
+
+    def test_fusion(self):
+        self.d4.fusion_deux_noeud(3,4)
+        self.assertEqual(self.d4.get_node_by_id(3).parents, {2:2,5: 1})
+        self.assertEqual(self.d4.get_node_by_id(3).children, {5:1})
 
         
 class matriceTest(unittest.TestCase):
