@@ -88,4 +88,6 @@ print(l[0])
 print(l[1])
 """
 #g.display(verbose=true)
-print(g.distances_la_plus_longue(1, 7))
+p = parse_parentheses("((x0)&((x1)&(x2)))|((x1)&(~(x2)))")
+p.display()
+print(p.is_well_formed())

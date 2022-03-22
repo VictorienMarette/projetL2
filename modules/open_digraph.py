@@ -302,19 +302,6 @@ class open_digraph(open_digraph_composition_mx, open_digraph_path_mx, open_digra
 
         # Mise a jour des autres noeuds
 
-        # Si le noeud est entrant
-        if parents == {}:
-            self.inputs.append(newId)
-            for idChildren in children:
-                if idChildren in self.inputs:
-                    self.inputs.remove(idChildren)
-        # Si le noeud est sortant
-        if children == {}:
-            self.outputs.append(newId)
-            for idParent in parents:
-                if idParent in self.outputs:
-                    self.outputs.remove(idParent)
-
         # Dans tous les cas
         for idParent in parents:
             # Ajout dans les parents
