@@ -86,8 +86,13 @@ print(a)
 l = a.get_connected_components()
 print(l[0])
 print(l[1])
-"""
+
 #g.display(verbose=true)
 p = parse_parentheses("((x0)&((x1)&(x2)))|((x1)&(~(x2)))")
+p1 = parse_parentheses("((x0)&((x1)&(x2)))|((x1)&(~(x2)))")
+p2 = parse_parentheses("((x0)&(~(x1)))|(x2)")
+p1.iparallel([p2])
+p1.display()
+"""
+p = parse_parentheses("((x0)&(x1)&(x2))|((x1)&(~(x2)))")
 p.display()
-print(p.is_well_formed())
