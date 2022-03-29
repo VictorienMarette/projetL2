@@ -48,6 +48,7 @@ class open_digraph_composition_mx:
             self.outputs.extend(b.outputs)
             self.inputs.extend(b.inputs)
             self.nodes.update(b.nodes)
+            self.lastNewId = b.lastNewId
         for g in l:
             sub_iparallel(g)
 

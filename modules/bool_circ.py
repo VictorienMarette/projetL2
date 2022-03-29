@@ -56,7 +56,6 @@ class bool_circ(open_digraph): # a subclass of open_digraph
                     
                 listOfGraph.append(b)
         res.iparallel(listOfGraph)
-
         entree_unique = False
         while not entree_unique:
             entree_unique = True
@@ -71,7 +70,10 @@ class bool_circ(open_digraph): # a subclass of open_digraph
                         res.remove_node_by_id(id2)
                         entree_unique = False
                         break
-        res.display()
+        nodeIdRes = res.get_node_ids()
+        tab = [nodeIdRes[i] for i in range(len(nodeIdRes)) if res.get_node_by_id(nodeIdRes[i]).get_label() == '&']
+        res.add_node('|', {ind:1 for ind in tab}, None)
+        return bool_circ(res)
                 
                 
 
