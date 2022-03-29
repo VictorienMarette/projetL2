@@ -1,6 +1,9 @@
+from sre_parse import Verbose
 from tkinter.filedialog import Open
+from tokenize import String
 from modules.matrice import *
 from modules.open_digraph import *
+from math import log2
 import random
 import os
 
@@ -29,6 +32,48 @@ class bool_circ(open_digraph): # a subclass of open_digraph
                 return False
 
         return not self.is_cyclic()
+
+    @classmethod
+    def synteseDes1(cls, strB: String):
+        k = 0
+        nbEntrees = int(log2(len(strB)))
+        res = open_digraph.empty()
+        listOfGraph = []
+        for i in range(0, len(strB)):
+            if strB[i] == '1':
+                b = open_digraph([], [], [])
+                b.add_node('&') #noeud d'id 1
+                x = [-1]*nbEntrees
+                for j in range(nbEntrees):
+                    bol = int(int(i)/2**(nbEntrees - int(j) - 1)) % 2 == 1
+                    if bol:
+                        b.add_node('', {}, {1:1})
+                        b.add_input_node(f"x{j}", b.lastNewId)
+                    else:
+                        b.add_node('~', {}, {1:1})
+                        b.add_node('', {}, {b.lastNewId:1})
+                        b.add_input_node(f"x{j}", b.lastNewId)
+                    
+                listOfGraph.append(b)
+        res.iparallel(listOfGraph)
+
+        entree_unique = False
+        while not entree_unique:
+            entree_unique = True
+            for i1 in range(len(res.get_input_ids())):
+                for i2 in range(i1+1, len(res.get_input_ids())):
+                    id1 = res.get_input_ids()[i1]
+                    id2 = res.get_input_ids()[i2]
+                    if res.get_node_by_id(id1).get_label() == res.get_node_by_id(id2).get_label():
+                        a = res.get_node_by_id(id1).get_children_ids()[0]
+                        b = res.get_node_by_id(id2).get_children_ids()[0]
+                        res.fusion_deux_noeud(a, b)
+                        res.remove_node_by_id(id2)
+                        entree_unique = False
+                        break
+        res.display()
+                
+                
 
 
 def parse_parentheses(*strings : str) -> bool_circ:

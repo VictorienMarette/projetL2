@@ -210,7 +210,7 @@ class open_digraph(open_digraph_composition_mx, open_digraph_path_mx, open_digra
         return str(self)
 
     @classmethod
-    def empty():
+    def empty(cls):
         '''return an empty graph'''
         return open_digraph([], [], [])
 
