@@ -100,6 +100,6 @@ p = parse_parentheses("((x0)&((x1)&(x2)))|((x1)&(~(x2)))", "((x0)&(~(x1)))|(x2)"
 p.display()
 print(p.is_well_formed())
 """
-t = bool_circ.synteseDes1("1110001000111111")
+t = bool_circ.Adder(0)
 t.display()
     

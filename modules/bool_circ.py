@@ -3,11 +3,9 @@ from tkinter.filedialog import Open
 from tokenize import String
 from modules.matrice import *
 from modules.open_digraph import *
-<<<<<<< HEAD
+
 import math
-=======
 from math import log2
->>>>>>> 7e5b141fca7d49de6ea6fa099879e879d1741a2c
 import random
 import os
 
@@ -78,6 +76,29 @@ class bool_circ(open_digraph): # a subclass of open_digraph
         tab = [nodeIdRes[i] for i in range(len(nodeIdRes)) if res.get_node_by_id(nodeIdRes[i]).get_label() == '&']
         res.add_node('|', {ind:1 for ind in tab}, None)
         return bool_circ(res)
+
+    @classmethod
+    def Adder(cls, n):
+        if n == 0:
+            g = open_digraph([], [], [])
+            g.add_node("", {}, {})
+            g.add_node("&", {1:1}, {})
+            g.add_node("", {}, {2:1})
+            g.add_node("^", {1:1, 3:1})
+            g.add_node("", {4:1}, {})
+            g.add_node("&", {5:1}, {})
+            g.add_node("|", {2:1, 6:1}, {})
+            g.add_node("", {}, {6:1})
+            g.add_node("^", {8:1, 4:1}, {})
+            g.add_input_node("x0", 1)
+            g.add_input_node("x1", 3)
+            g.add_input_node("x2", 8)
+            g.add_output_nodes("o0", 7)
+            g.add_output_nodes("o1", 9)
+            return bool_circ(g)
+        else:
+            adder1 = bool_circ.Adder(n - 1)
+            adder2 = bool_circ.copy()
                 
                 
 
