@@ -3,11 +3,7 @@ from tkinter.filedialog import Open
 from tokenize import String
 from modules.matrice import *
 from modules.open_digraph import *
-<<<<<<< HEAD
 import math
-=======
-from math import log2
->>>>>>> 7e5b141fca7d49de6ea6fa099879e879d1741a2c
 import random
 import os
 
@@ -40,7 +36,7 @@ class bool_circ(open_digraph): # a subclass of open_digraph
     @classmethod
     def synteseDes1(cls, strB: String):
         k = 0
-        nbEntrees = int(log2(len(strB)))
+        nbEntrees = int(math.log2(len(strB)))
         res = open_digraph.empty()
         listOfGraph = []
         for i in range(0, len(strB)):
@@ -78,8 +74,84 @@ class bool_circ(open_digraph): # a subclass of open_digraph
         tab = [nodeIdRes[i] for i in range(len(nodeIdRes)) if res.get_node_by_id(nodeIdRes[i]).get_label() == '&']
         res.add_node('|', {ind:1 for ind in tab}, None)
         return bool_circ(res)
-                
-                
+
+    @classmethod
+    def random(cls, n,inp = 0, outp = 0):
+        operateurs_unitaires = ["~"]
+        operateurs_binaires = ["&", "|"]
+        
+        g = open_digraph.random(n, 2,form="DAG")
+        l = g.get_node_ids().copy()
+        for id in l:
+            nod = g.get_node_by_id(id)
+            if len(nod.get_parent_ids()) == 0:
+                g.add_node(nod.label, {}, {id:1})
+                g.add_input_id(g.lastNewId)
+                nod.label = ""
+            if len(nod.get_children_ids()) == 0:
+                g.add_node("", {id:1}, {})
+                g.add_output_id(g.lastNewId)
+                nod.label = ""
+        
+
+        if inp != 0:
+            l1 = g.get_node_ids()
+            l2 = g.get_input_ids()
+            l3 = g.get_output_ids()
+            l = [x for x in l1 if x not in l2 and x not in l3]
+            while len(g.inputs) < inp:
+                i = random.choice(l)
+                g.add_input_node("x"+str(i), i)
+                g.get_node_by_id(i).set_label("")
+                l.remove(i)
+            while len(g.inputs) > inp:
+                l2 = g.get_input_ids()
+                i1 = random.choice(l2)
+                i2 = random.choice([x for x in l2 if x != i1])
+                I1 = g.get_node_by_id(i1).get_children_ids()[0]
+                I2 = g.get_node_by_id(i2).get_children_ids()[0]
+                g.remove_nodes_by_id([i1,i2])
+                g.add_node("",{},{I1:1,I2:1})
+                g.add_input_node("x" +str(g.new_id()),g.lastNewId) 
+
+        if outp != 0:
+            l1 = g.get_node_ids()
+            l2 = g.get_output_ids()
+            l3 = g.get_input_ids()
+            l = [x for x in l1 if x not in l2 and x not in l3]
+            while len(g.outputs) < outp:
+                i = random.choice(l)
+                g.add_output_nodes("", i)
+                l.remove(i)
+            while len(g.outputs) > outp:
+                l2 = g.get_output_ids()
+                i1 = random.choice(l2)
+                i2 = random.choice([x for x in l2 if x != i1])
+                I1 = g.get_node_by_id(i1).get_parent_ids()[0]
+                I2 = g.get_node_by_id(i2).get_parent_ids()[0]
+                g.remove_nodes_by_id([i1,i2])
+                g.add_node("",{I1:1,I2:1}, {})
+                g.add_output_nodes("",g.lastNewId) 
+            
+        l = g.get_node_ids().copy()
+        for id in l:
+            nod = g.get_node_by_id(id)
+            if len(nod.get_parent_ids()) == 1 and len(nod.get_children_ids()) == 1:
+                nod.set_label(random.choice(operateurs_unitaires))
+            if len(nod.get_parent_ids()) == 1 and len(nod.get_children_ids()) > 1:
+                nod.set_label("")
+            if len(nod.get_parent_ids()) > 1 and len(nod.get_children_ids()) == 1:
+                nod.set_label(random.choice(operateurs_binaires))
+            if len(nod.get_parent_ids()) > 1 and len(nod.get_children_ids()) > 1:
+                p = nod.parents.copy()
+                c = nod.children.copy()
+                g.remove_node_by_id(nod.id)
+                i1 = g.lastNewId
+                i2 = i1 +1
+                g.add_node(random.choice(operateurs_binaires), p,{})
+                g.add_node("", {g.lastNewId:1},c)
+                g.lastNewId += 2
+        return g                
 
 
 def parse_parentheses(*strings : str) -> bool_circ:
