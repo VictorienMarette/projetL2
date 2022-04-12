@@ -100,7 +100,7 @@ p = parse_parentheses("((x0)&((x1)&(x2)))|((x1)&(~(x2)))", "((x0)&(~(x1)))|(x2)"
 p.display()
 print(p.is_well_formed())
 """
-t = bool_circ.Adder(3)
+t = bool_circ.half_Adder(2)
 print(t.is_well_formed())
 t.display()
     

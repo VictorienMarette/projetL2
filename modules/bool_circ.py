@@ -161,6 +161,7 @@ class bool_circ(open_digraph): # a subclass of open_digraph
                 g.lastNewId += 2
         return g                
 
+    @classmethod
     def Adder(cls, n):
         if n == 0:
             g = open_digraph([], [], [])
@@ -214,6 +215,13 @@ class bool_circ(open_digraph): # a subclass of open_digraph
             adder.remove_node_by_id(smallXRet)
             adder.add_edge(src, tgt)
             return adder
+
+    @classmethod
+    def half_Adder(cls, n):
+        adder = bool_circ.Adder(n)
+        xRetId = [id for id in adder.get_input_ids() if adder.get_node_by_id(id).get_label() == f"xret"][0]
+        adder.get_node_by_id(xRetId).set_label("0")
+        return adder
 
 
 def parse_parentheses(*strings : str) -> bool_circ:
