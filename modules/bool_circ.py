@@ -3,13 +3,10 @@ from tkinter.filedialog import Open
 from tokenize import String
 from modules.matrice import *
 from modules.open_digraph import *
-<<<<<<< HEAD
 import math
-=======
 
 import math
 from math import log2
->>>>>>> 8774c16edd3aa6373a0e2d04478657842ab8d844
 import random
 import os
 
