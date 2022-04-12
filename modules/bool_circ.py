@@ -3,7 +3,13 @@ from tkinter.filedialog import Open
 from tokenize import String
 from modules.matrice import *
 from modules.open_digraph import *
+<<<<<<< HEAD
 import math
+=======
+
+import math
+from math import log2
+>>>>>>> 8774c16edd3aa6373a0e2d04478657842ab8d844
 import random
 import os
 
@@ -152,6 +158,28 @@ class bool_circ(open_digraph): # a subclass of open_digraph
                 g.add_node("", {g.lastNewId:1},c)
                 g.lastNewId += 2
         return g                
+
+    def Adder(cls, n):
+        if n == 0:
+            g = open_digraph([], [], [])
+            g.add_node("", {}, {})
+            g.add_node("&", {1:1}, {})
+            g.add_node("", {}, {2:1})
+            g.add_node("^", {1:1, 3:1})
+            g.add_node("", {4:1}, {})
+            g.add_node("&", {5:1}, {})
+            g.add_node("|", {2:1, 6:1}, {})
+            g.add_node("", {}, {6:1})
+            g.add_node("^", {8:1, 4:1}, {})
+            g.add_input_node("x0", 1)
+            g.add_input_node("x1", 3)
+            g.add_input_node("x2", 8)
+            g.add_output_nodes("o0", 7)
+            g.add_output_nodes("o1", 9)
+            return bool_circ(g)
+        else:
+            adder1 = bool_circ.Adder(n - 1)
+            adder2 = bool_circ.copy()
 
 
 def parse_parentheses(*strings : str) -> bool_circ:
