@@ -24,14 +24,19 @@ class bool_circ(open_digraph): # a subclass of open_digraph
         for theNode in self.get_nodes():
 
             if(theNode.get_label() == '&' and theNode.outdegree() != 1):
+                print("Condition 1")
                 return False
             elif(theNode.get_label() == '|' and theNode.outdegree() != 1):
+                print("Condition 2")
                 return False
             elif(theNode.get_label() == '^' and theNode.outdegree() != 1):
+                print("Condition 3")
                 return False
             elif(theNode.get_label() == '~' and (theNode.indegree() != 1 or theNode.outdegree() != 1)):
+                print("Condition 4")
                 return False
             elif(theNode.get_label() == '' and theNode.indegree() != 1):
+                print("Condition 5")
                 return False
             elif((theNode.get_label() == '1' or theNode.get_label() == '0')  and (theNode.indegree() != 0 or theNode.outdegree() != 1)):
                 return False
@@ -182,6 +187,7 @@ class bool_circ(open_digraph): # a subclass of open_digraph
                 g.lastNewId += 2
         return bool_circ(g)                
 
+    @classmethod
     def Adder(cls, n):
         if n == 0:
             g = open_digraph([], [], [])
@@ -193,16 +199,55 @@ class bool_circ(open_digraph): # a subclass of open_digraph
             g.add_node("&", {5:1}, {})
             g.add_node("|", {2:1, 6:1}, {})
             g.add_node("", {}, {6:1})
-            g.add_node("^", {8:1, 4:1}, {})
+            g.add_node("^", {8:1, 5:1}, {})
             g.add_input_node("x0", 1)
             g.add_input_node("x1", 3)
-            g.add_input_node("x2", 8)
-            g.add_output_nodes("o0", 7)
-            g.add_output_nodes("o1", 9)
+            g.add_input_node("xret", 8)
+            g.add_output_nodes("oret", 7)
+            g.add_output_nodes("o0", 9)
             return bool_circ(g)
         else:
-            adder1 = bool_circ.Adder(n - 1)
-            adder2 = bool_circ.copy()
+            adder = bool_circ.Adder(n - 1)
+            adderbis = adder.copy()
+            adder.iparallel([adderbis])
+            deuxPuiss = 2**n
+            for i in range(0, deuxPuiss):
+                bigId = max([id for id in adder.get_input_ids() if adder.get_node_by_id(id).get_label() == f"x{i}"])
+                adder.get_node_by_id(bigId).set_label(f"x{i + deuxPuiss}")
+
+            for i in range(int(deuxPuiss/2), deuxPuiss):
+                smallId = [id for id in adder.get_input_ids() if adder.get_node_by_id(id).get_label() == f"x{i}"][0]
+                bigId = [id for id in adder.get_input_ids() if adder.get_node_by_id(id).get_label() == f"x{2*deuxPuiss - i - 1}"][0]
+                nS = adder.get_node_by_id(smallId)
+                bS = adder.get_node_by_id(bigId)
+                idFilsSmall = nS.get_children_ids()[0]
+                idFilsBig = bS.get_children_ids()[0]
+                adder.remove_edge(smallId, idFilsSmall)
+                adder.remove_edge(bigId, idFilsBig)
+                adder.add_edge(smallId, idFilsBig)
+                adder.add_edge(bigId, idFilsSmall)
+
+            for i in range(0, int(deuxPuiss/2)):
+                bigId = max([id for id in adder.get_output_ids() if adder.get_node_by_id(id).get_label() == f"o{i}"])
+                adder.get_node_by_id(bigId).set_label(f"o{i + int(deuxPuiss/2)}")
+
+            # retenus
+            retBanq = [id for id in adder.get_output_ids() if adder.get_node_by_id(id).get_label() == f"oret"]
+            bigORet = max(retBanq)
+            smallXRet = min([id for id in adder.get_input_ids() if adder.get_node_by_id(id).get_label() == f"xret"])
+            src = adder.get_node_by_id(bigORet).get_parent_ids()[0]
+            tgt = adder.get_node_by_id(smallXRet).get_children_ids()[0]
+            adder.remove_node_by_id(bigORet)
+            adder.remove_node_by_id(smallXRet)
+            adder.add_edge(src, tgt)
+            return adder
+
+    @classmethod
+    def half_Adder(cls, n):
+        adder = bool_circ.Adder(n)
+        xRetId = [id for id in adder.get_input_ids() if adder.get_node_by_id(id).get_label() == f"xret"][0]
+        adder.get_node_by_id(xRetId).set_label("0")
+        return adder
 
 
 def parse_parentheses(*strings : str) -> bool_circ:
