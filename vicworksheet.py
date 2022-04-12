@@ -5,5 +5,5 @@ from modules.matrice import *
 from modules.bool_circ import *
 import inspect
 
-g = bool_circ.random(30,inp = 2,outp = 2)
+g = bool_circ.random(20,inpt = 1)
 g.display()

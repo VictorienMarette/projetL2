@@ -33,8 +33,21 @@ class bool_circ(open_digraph): # a subclass of open_digraph
                 return False
             elif(theNode.get_label() == '' and theNode.indegree() != 1):
                 return False
+            elif((theNode.get_label() == '1' or theNode.get_label() == '0')  and (theNode.indegree() != 0 or theNode.outdegree() != 1)):
+                return False
 
         return not self.is_cyclic()
+
+    def regles_copies(self, id):
+        my_node = self.get_node_by_id(id)
+        if my_node.get_label() == "":
+            my_parent = self.get_node_by_id(my_node.get_parent_ids()[0])
+            if my_parent.get_label() in ["0","1"]:
+                my_childrens = my_node.get_children_ids()
+                for ch in my_childrens:
+                    self.add_node(my_parent.get_label(), {},{ch:1})
+                self.remove_node_by_id(id)
+
 
     @classmethod
     def synteseDes1(cls, strB: String):
@@ -77,6 +90,19 @@ class bool_circ(open_digraph): # a subclass of open_digraph
         tab = [nodeIdRes[i] for i in range(len(nodeIdRes)) if res.get_node_by_id(nodeIdRes[i]).get_label() == '&']
         res.add_node('|', {ind:1 for ind in tab}, None)
         return bool_circ(res)
+
+    @classmethod
+    def int_to_bbc(cls, entier :int, taille_registre :int ):
+        g = bool_circ.empty()
+        l = []
+        for i in range(taille_registre):
+            j = entier%2
+            l = [j]+l
+            entier = (entier-j)/2
+        print(l)
+        for j in l:
+            g.iparallel([bool_circ(open_digraph([], [1],[node(0,str(int(j)), {},{1:1}), node(1,"",{0:1},{})]))])
+        return g
 
     @classmethod
     def random(cls, n,inp = 0, outp = 0):
@@ -154,7 +180,7 @@ class bool_circ(open_digraph): # a subclass of open_digraph
                 g.add_node(random.choice(operateurs_binaires), p,{})
                 g.add_node("", {g.lastNewId:1},c)
                 g.lastNewId += 2
-        return g                
+        return bool_circ(g)                
 
     def Adder(cls, n):
         if n == 0:
