@@ -1,4 +1,7 @@
-class bool_circ_regle_mx():
+from modules.open_digraph import open_digraph
+
+
+class bool_circ_regle_mx(open_digraph):
     """
     methode des regles de simplification du TD11
     En general : id*typeDeNoeud* -> int node id
@@ -14,7 +17,8 @@ class bool_circ_regle_mx():
                 my_childrens = my_node.get_children_ids()
                 for ch in my_childrens:
                     self.add_node(my_parent.get_label(), {},{ch:1})
-                self.remove_node_by_id(id)
+                self.remove_node_by_id(idEntre)
+                self.remove_node_by_id(idCopie)
 
     def regle_porte_non(self, idNon, idEntre):
         # idNon pointe sur le noeud non
@@ -76,3 +80,5 @@ class bool_circ_regle_mx():
             my_node.set_label("0")
         if my_node.get_label() == "&":
             my_node.set_label("1") 
+
+   

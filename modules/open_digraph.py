@@ -431,17 +431,17 @@ class open_digraph(open_digraph_composition_mx, open_digraph_path_mx, open_digra
         f.write("}")
         f.close()
 
-    def display(self, verbose=False):
+    def display(self, verbose=False, name="tmp"):
         """
         save the current graph and display it
         """
-        self.save_as_dot_file("tmp_files/tmp.dot", verbose)
+        self.save_as_dot_file(f"tmp_files/{name}.dot", verbose)
         if os.name == 'nt':
-            os.system("dot -Tpdf tmp_files/tmp.dot -o tmp_files/tmp.pdf")
-            os.system("START tmp_files/tmp.pdf") # fonctionne pour le cmd prompt de windows
+            os.system(f"dot -Tpdf tmp_files/{name}.dot -o tmp_files/{name}.pdf")
+            os.system(f"START tmp_files/{name}.pdf") # fonctionne pour le cmd prompt de windows
         else:
-            os.system("dot -Tpdf tmp_files/tmp.dot -o tmp_files/tmp.pdf")
-            os.system("firefox tmp_files/tmp.pdf")
+            os.system(f"dot -Tpdf tmp_files/{name}.dot -o tmp_files/{name}.pdf")
+            os.system(f"firefox tmp_files/{name}.pdf")
 
     def copy(self):
         '''return a copy of the graph'''

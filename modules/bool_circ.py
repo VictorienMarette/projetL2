@@ -11,7 +11,7 @@ from math import log2
 import random
 import os
 
-class bool_circ(open_digraph, bool_circ_regle_mx): # a subclass of open_digraph
+class bool_circ(bool_circ_regle_mx): # a subclass of open_digraph
 
     def __init__(self, g):
         """
@@ -98,6 +98,45 @@ class bool_circ(open_digraph, bool_circ_regle_mx): # a subclass of open_digraph
         for j in l:
             g.iparallel([bool_circ(open_digraph([], [1],[node(0,str(int(j)), {},{1:1}), node(1,"",{0:1},{})]))])
         return g
+
+    #co feuille = noeud qui a des enfants mais pas de parents
+    def evaluate(self):
+        flag = True
+        while flag:
+            flag = False
+            for id in self.get_node_ids():
+                if(id in self.get_node_ids()):
+                    # le noeud n'a pas ete suppr
+                    myNode = self.get_node_by_id(id)
+                    if myNode.get_parent_ids() == []:
+                        # le noeud n'a pas de parent et n'est pas un input
+                        if(myNode.get_label() not in ["0", "1"]):
+                            self.regle_element_neutre(id)
+                        elif myNode.get_children_ids() != [] and not myNode.get_children_ids()[0] in self.get_output_ids():
+                            if(len(myNode.get_children_ids()) > 1):
+                                raise RuntimeError("Plus d'un enfant")
+                            id_op = myNode.get_children_ids()[0]
+                            idEntre = id
+                            str_op = self.get_node_by_id(id_op).get_label()
+                            if(str_op == ""):
+                                self.regle_copies(id_op, idEntre)
+                                flag = True
+                            elif(str_op == "&"):
+                                self.regle_porte_et(id_op, idEntre)
+                                flag = True
+                            elif(str_op == "|"):
+                                self.regle_porte_ou(id_op, idEntre)
+                                flag = True
+                            elif(str_op == "^"):
+                                self.regle_porte_ou_exclusif(id_op, idEntre)
+                                flag = True
+                            elif(str_op == "~"):
+                                self.regle_porte_non(id_op, idEntre)
+                                flag = True
+                            self.display(verbose=True)
+                        
+                        
+
 
     @classmethod
     def random(cls, n,inp = 0, outp = 0):

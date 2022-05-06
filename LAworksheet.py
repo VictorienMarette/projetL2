@@ -100,7 +100,9 @@ p = parse_parentheses("((x0)&((x1)&(x2)))|((x1)&(~(x2)))", "((x0)&(~(x1)))|(x2)"
 p.display()
 print(p.is_well_formed())
 """
-t = bool_circ.half_Adder(2)
-print(t.is_well_formed())
-t.display()
+t = bool_circ.Adder(1)
+t.get_node_by_id(25).set_label("0")
+t.display(verbose=True, name="tmp1")
+t.evaluate()
+
     
