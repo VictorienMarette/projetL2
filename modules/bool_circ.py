@@ -1,6 +1,7 @@
 from sre_parse import Verbose
 from tkinter.filedialog import Open
 from tokenize import String
+from modules.bool_circ_regle_mx import bool_circ_regle_mx
 from modules.matrice import *
 from modules.open_digraph import *
 import math
@@ -10,7 +11,7 @@ from math import log2
 import random
 import os
 
-class bool_circ(open_digraph): # a subclass of open_digraph
+class bool_circ(open_digraph, bool_circ_regle_mx): # a subclass of open_digraph
 
     def __init__(self, g):
         """
@@ -42,17 +43,6 @@ class bool_circ(open_digraph): # a subclass of open_digraph
                 return False
 
         return not self.is_cyclic()
-
-    def regles_copies(self, id):
-        my_node = self.get_node_by_id(id)
-        if my_node.get_label() == "":
-            my_parent = self.get_node_by_id(my_node.get_parent_ids()[0])
-            if my_parent.get_label() in ["0","1"]:
-                my_childrens = my_node.get_children_ids()
-                for ch in my_childrens:
-                    self.add_node(my_parent.get_label(), {},{ch:1})
-                self.remove_node_by_id(id)
-
 
     @classmethod
     def synteseDes1(cls, strB: String):
