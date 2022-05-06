@@ -105,7 +105,7 @@ class bool_circ_regle_mx(open_digraph):
         node_child = self.get_node_by_id(id_child)
         if(not node_father.isDirectParent(id_child) or not node_child.isDirectChild(id_father)):
             raise ValueError("Pas parents directs")
-        while(node_father.children[id_child] >= 2):
+        while(node_father.isDirectParent(id_child) and node_father.children[id_child] >= 2):
             self.remove_edge(id_father, id_child)
             self.remove_edge(id_father, id_child)
 
@@ -121,6 +121,36 @@ class bool_circ_regle_mx(open_digraph):
     def regle_non_a_travers_XOR(self, id_father, id_child):
         node_father = self.get_node_by_id(id_father)
         node_child = self.get_node_by_id(id_child)
+        if(not node_father.isDirectParent(id_child) or not node_child.isDirectChild(id_father)):
+            raise ValueError("Pas parents directs")
+        pr = node_father.get_parent_ids()[0]
+        self.add_edge(pr, id_child)
+        self.remove_node_by_id(id_father)
+        ch = node_child.get_children_ids()[0]
+        self.add_node("~", {id_child:1}, {ch:1})
+        self.remove_edge(id_child, ch)
+
+    def regle_non_a_travers_copie(self, id_father, id_child):
+        node_father = self.get_node_by_id(id_father)
+        node_child = self.get_node_by_id(id_child)
+        if(not node_father.isDirectParent(id_child) or not node_child.isDirectChild(id_father)):
+            raise ValueError("Pas parents directs")
+        for ch in node_child.get_children_ids():
+            self.add_node("~", {id_child:1}, {ch:1})
+        pr = node_father.get_parent_ids()[0]
+        self.add_edge(pr, id_child)
+        self.remove_node_by_id(id_father)
+
+    def regle_involution_du_non(self, id_father, id_child):
+        node_father = self.get_node_by_id(id_father)
+        node_child = self.get_node_by_id(id_child)
+        if(not node_father.isDirectParent(id_child) or not node_child.isDirectChild(id_father)):
+            raise ValueError("Pas parents directs")
+        pr = node_father.get_parent_ids()[0]
+        ch = node_child.get_children_ids()[0]
+        self.add_edge(pr, ch)
+        self.remove_node_by_id(id_father)
+        self.remove_node_by_id(id_child)
 
    #co feuille = noeud qui a des enfants mais pas de parents
     def evaluate(self):
@@ -129,7 +159,7 @@ class bool_circ_regle_mx(open_digraph):
             flag = False
             for id in self.get_node_ids():
                 if(id in self.get_node_ids()):
-                    # le noeud n'a pas ete suppr
+                    # au cas ou le noeud n'a pas ete suppr de la liste mais suppr du graph
                     myNode = self.get_node_by_id(id)
                     if myNode.get_parent_ids() == []:
                         # le noeud n'a pas de parent et n'est pas un input
@@ -159,4 +189,39 @@ class bool_circ_regle_mx(open_digraph):
                             elif(str_op == "~"):
                                 self.regle_porte_non(id_op, idEntre)
                                 flag = True
-                            # self.display()
+                    else:
+                        # le noeud a forcement des parents
+                        if myNode.get_children_ids() != []:
+                            str_father = myNode.get_label()
+                            if(str_father == "^"):
+                                ch = myNode.get_children_ids()[0]
+                                myChild = self.get_node_by_id(ch)
+                                if(myChild.get_label() == "^"):
+                                    self.regle_associativite_XOR(id, ch)
+                                    flag = True
+                            elif(str_father == ""):
+                                for idn in myNode.get_children_ids():
+                                    n = self.get_node_by_id(idn)
+                                    if n.get_label() == "":
+                                        self.regle_associativite_copie(id, idn)
+                                        flag = True
+                                    elif(n.get_label() == "^" and myNode.children[idn] >= 2):
+                                        self.regle_involution_XOR(id, n.get_id())
+                                        flag = True
+                            elif(str_father == "~"):
+                                ch = myNode.get_children_ids()[0]
+                                myChild = self.get_node_by_id(ch)
+                                str_child = myChild.get_label()
+                                if(str_child == "^"):
+                                    self.regle_non_a_travers_XOR(id, ch)
+                                    flag = True
+                                elif(str_child == ""):
+                                    self.regle_non_a_travers_copie(id, ch)
+                                    flag = True
+                                elif(str_child == "~"):
+                                    self.regle_involution_du_non(id, ch)
+                                    flag = True
+                        elif myNode.get_label() == "":
+                            self.regle_effacement(myNode.get_parent_ids()[0], id)
+                            flag = True
+                        
