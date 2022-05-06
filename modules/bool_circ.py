@@ -133,7 +133,7 @@ class bool_circ(bool_circ_regle_mx): # a subclass of open_digraph
                             elif(str_op == "~"):
                                 self.regle_porte_non(id_op, idEntre)
                                 flag = True
-                            self.display(verbose=True)
+                            self.display()
                         
                         
 

@@ -146,6 +146,7 @@ class open_digraph(open_digraph_composition_mx, open_digraph_path_mx, open_digra
         self.inputs = inputs
         self.outputs = outputs
         self.nodes = {node.id:node for node in nodes} # self.nodes: <int,node> dict
+        self.idAffichage = 0 # pour gerer l affichage
         if self.nodes == {}:
             self.lastNewId = 0
         else:
@@ -435,6 +436,9 @@ class open_digraph(open_digraph_composition_mx, open_digraph_path_mx, open_digra
         """
         save the current graph and display it
         """
+        if name == "tmp":
+            name = name + str(self.idAffichage)
+            self.idAffichage += 1
         self.save_as_dot_file(f"tmp_files/{name}.dot", verbose)
         if os.name == 'nt':
             os.system(f"dot -Tpdf tmp_files/{name}.dot -o tmp_files/{name}.pdf")

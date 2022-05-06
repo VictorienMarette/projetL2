@@ -102,7 +102,7 @@ print(p.is_well_formed())
 """
 t = bool_circ.Adder(1)
 t.get_node_by_id(25).set_label("0")
-t.display(verbose=True, name="tmp1")
+t.display(verbose=True)
 t.evaluate()
 
     
