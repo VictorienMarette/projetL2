@@ -71,6 +71,7 @@ class bool_circ_regle_mx(open_digraph):
                     self.remove_node_by_id(idEntre)
                 else:
                     self.remove_node_by_id(idEntre)
+                    self.remove_edge(idOuExcl, ch)
                     self.add_node("~", {idOuExcl:1}, {ch:1})
 
     def regle_element_neutre(self, idElem):
@@ -81,4 +82,41 @@ class bool_circ_regle_mx(open_digraph):
         if my_node.get_label() == "&":
             my_node.set_label("1") 
 
-   
+   #co feuille = noeud qui a des enfants mais pas de parents
+    def evaluate(self):
+        flag = True
+        while flag:
+            flag = False
+            for id in self.get_node_ids():
+                if(id in self.get_node_ids()):
+                    # le noeud n'a pas ete suppr
+                    myNode = self.get_node_by_id(id)
+                    if myNode.get_parent_ids() == []:
+                        # le noeud n'a pas de parent et n'est pas un input
+                        if myNode.get_children_ids() == []:
+                            self.remove_node_by_id(id)
+                            continue
+                        if(myNode.get_label() not in ["0", "1"]):
+                            self.regle_element_neutre(id)
+                        elif not myNode.get_children_ids()[0] in self.get_output_ids():
+                            if(len(myNode.get_children_ids()) > 1):
+                                raise RuntimeError("Plus d'un enfant")
+                            id_op = myNode.get_children_ids()[0]
+                            idEntre = id
+                            str_op = self.get_node_by_id(id_op).get_label()
+                            if(str_op == ""):
+                                self.regle_copies(id_op, idEntre)
+                                flag = True
+                            elif(str_op == "&"):
+                                self.regle_porte_et(id_op, idEntre)
+                                flag = True
+                            elif(str_op == "|"):
+                                self.regle_porte_ou(id_op, idEntre)
+                                flag = True
+                            elif(str_op == "^"):
+                                self.regle_porte_ou_exclusif(id_op, idEntre)
+                                flag = True
+                            elif(str_op == "~"):
+                                self.regle_porte_non(id_op, idEntre)
+                                flag = True
+                            self.display()
