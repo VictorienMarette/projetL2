@@ -82,6 +82,46 @@ class bool_circ_regle_mx(open_digraph):
         if my_node.get_label() == "&":
             my_node.set_label("1") 
 
+    def regle_associativite_XOR(self, id_father, id_child):
+        node_father = self.get_node_by_id(id_father)
+        node_child = self.get_node_by_id(id_child)
+        if(not node_father.isDirectParent(id_child) or not node_child.isDirectChild(id_father)):
+            raise ValueError("Pas parents directs")
+        for pr in node_father.get_parent_ids():
+            self.add_edge(pr, id_child)
+        self.remove_node_by_id(id_father)
+
+    def regle_associativite_copie(self, id_father, id_child):
+        node_father = self.get_node_by_id(id_father)
+        node_child = self.get_node_by_id(id_child)
+        if(not node_father.isDirectParent(id_child) or not node_child.isDirectChild(id_father)):
+            raise ValueError("Pas parents directs")
+        for pr in node_father.get_parent_ids():
+            self.add_edge(pr, id_child)
+        self.remove_node_by_id(id_father)
+
+    def regle_involution_XOR(self, id_father, id_child):
+        node_father = self.get_node_by_id(id_father)
+        node_child = self.get_node_by_id(id_child)
+        if(not node_father.isDirectParent(id_child) or not node_child.isDirectChild(id_father)):
+            raise ValueError("Pas parents directs")
+        while(node_father.children[id_child] >= 2):
+            self.remove_edge(id_father, id_child)
+            self.remove_edge(id_father, id_child)
+
+    def regle_effacement(self, id_father, id_child):
+        node_father = self.get_node_by_id(id_father)
+        node_child = self.get_node_by_id(id_child)
+        if(not node_father.isDirectParent(id_child) or not node_child.isDirectChild(id_father)):
+            raise ValueError("Pas parents directs")
+        for pr in node_father.get_parent_ids():
+            self.add_node("", {pr:1}, {})
+            self.remove_nodes_by_id([id_father, id_child])
+
+    def regle_non_a_travers_XOR(self, id_father, id_child):
+        node_father = self.get_node_by_id(id_father)
+        node_child = self.get_node_by_id(id_child)
+
    #co feuille = noeud qui a des enfants mais pas de parents
     def evaluate(self):
         flag = True
