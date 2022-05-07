@@ -19,25 +19,30 @@ class bool_circ(bool_circ_regle_mx): # a subclass of open_digraph
         """
         super().__init__(g.inputs.copy(), g.outputs.copy(), g.nodes.values())
 
-    def is_well_formed(self):
+    def is_well_formed(self, printCondition = False):
 
         # Condition sur les degrees
         for theNode in self.get_nodes():
 
             if(theNode.get_label() == '&' and theNode.outdegree() != 1):
-                print("Condition 1")
+                if printCondition:
+                    print("Condition 1")
                 return False
             elif(theNode.get_label() == '|' and theNode.outdegree() != 1):
-                print("Condition 2")
+                if printCondition:
+                    print("Condition 2")
                 return False
             elif(theNode.get_label() == '^' and theNode.outdegree() != 1):
-                print("Condition 3")
+                if printCondition:
+                    print("Condition 3")
                 return False
             elif(theNode.get_label() == '~' and (theNode.indegree() != 1 or theNode.outdegree() != 1)):
-                print("Condition 4")
+                if printCondition:
+                    print("Condition 4")
                 return False
             elif(theNode.get_label() == '' and theNode.indegree() != 1):
-                print("Condition 5")
+                if printCondition:
+                    print("Condition 5")
                 return False
             elif((theNode.get_label() == '1' or theNode.get_label() == '0')  and (theNode.indegree() != 0 or theNode.outdegree() != 1)):
                 return False

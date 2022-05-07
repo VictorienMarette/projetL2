@@ -419,9 +419,9 @@ class bool_circTest(unittest.TestCase):
         t = self.add
         t.get_node_by_id(25).set_label("0")
         t.get_node_by_id(26).set_label("1")
-        #t.display()
+        t.display()
         t.evaluate()
-        #t.display()
+        t.display()
 
     
 
