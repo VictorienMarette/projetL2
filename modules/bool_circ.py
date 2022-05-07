@@ -239,6 +239,17 @@ class bool_circ(bool_circ_regle_mx): # a subclass of open_digraph
         adder.get_node_by_id(xRetId).set_label("0")
         return adder
 
+    @classmethod
+    def encodeur(cls):
+        a = parse_parentheses("(((x1)^(x2))^(x4))","(((x1)^(x3))^(x4))","(x1)","(((x2)^(x3))^(x4))","(x2)","(x3)","(x4)")
+        a.evaluate()
+        return a
+
+    @classmethod
+    def desencodeur(cls):
+        return parse_parentheses("((x1)&(x2)&(x4))","((x1)&(x3)&(x4))","(x1)","((x2)&(x3)&(x4))","(x2)","(x3)","(x4)")
+        #(x1)^(x3)^(x5)^(x7)  (x2)^(x3)^(x6)^(x7) (x4)^(x5)^(x6)^(x7)
+
 
 def parse_parentheses(*strings : str) -> bool_circ:
 
