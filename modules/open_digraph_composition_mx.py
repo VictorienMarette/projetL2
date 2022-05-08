@@ -67,16 +67,19 @@ class open_digraph_composition_mx:
         fait f = gof
         les noeuds de sortie de f et ceux d entrer de g fusionne
         '''
-        print(self.get_input_ids())
-        print(g.get_output_ids())
         if len(self.get_input_ids()) != len(g.get_output_ids()):
             raise Exception("f n as pas autant de sortie que g a d entrée")
+        
         b = g.copy()
-        self.shift_indices(g.max_id() + 1)
+        self.shift_indices(b.max_id() + 1)
+        
         for i in range(len(self.get_input_ids())):
-            print(b.get_output_ids()[i])
-            self.get_node_by_id(self.get_input_ids()[i]).add_parent_id(b.get_output_ids()[i])
-            b.get_node_by_id(b.get_output_ids()[i]).add_child_id(self.get_input_ids()[i])
+            self.get_node_by_id(self.get_node_by_id(self.get_input_ids()[i]).get_children_ids()[0]).set_parents_ids({b.get_node_by_id(b.get_output_ids()[i]).get_parent_ids()[0]:1})
+            b.get_node_by_id(b.get_node_by_id(b.get_output_ids()[i]).get_parent_ids()[0]).set_children_ids({self.get_node_by_id(self.get_input_ids()[i]).get_children_ids()[0]:1})
+        
+        self.remove_nodes_by_id(self.get_input_ids().copy())
+        b.remove_nodes_by_id(b.get_output_ids().copy())
+        
         self.nodes.update(b.nodes)
         self.inputs = b.get_input_ids()
 

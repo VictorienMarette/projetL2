@@ -1,3 +1,4 @@
+from sympy import true
 from modules.open_digraph import open_digraph
 
 
@@ -190,6 +191,7 @@ class bool_circ_regle_mx(open_digraph):
                             elif(str_op == "~"):
                                 self.regle_porte_non(id_op, idEntre)
                                 flag = True
+                            self.display(verbose=true)
                     else:
                         
                         # le noeud a forcement des parents

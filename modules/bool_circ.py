@@ -99,7 +99,6 @@ class bool_circ(bool_circ_regle_mx): # a subclass of open_digraph
             j = entier%2
             l = [j]+l
             entier = (entier-j)/2
-        print(l)
         for j in l:
             g.iparallel([bool_circ(open_digraph([], [1],[node(0,str(int(j)), {},{1:1}), node(1,"",{0:1},{})]))])
         return g                      
@@ -247,15 +246,15 @@ class bool_circ(bool_circ_regle_mx): # a subclass of open_digraph
     @classmethod
     def encodeur(cls):
         a = parse_parentheses("(((x1)^(x2))^(x4))","(((x1)^(x3))^(x4))","(x1)","(((x2)^(x3))^(x4))","(x2)","(x3)","(x4)")
-        #a.evaluate()
+        a.evaluate()
         return a
 
     @classmethod
     def desencodeur(cls):
         a1 = parse_parentheses("((((x1)^(x3))^(x5))^(x7))", "((((x2)^(x3))^(x6))^(x7))", "x3", "((((x4)^(x5))^(x6))^(x7))", "(x5)", "x6", "(x7)")
         a2 = parse_parentheses("((((x1)&(x2))&(~(x4)))^(x3))", "((((x1)&(~(x2)))&(x4))^(x5))", "((((~(x1))&(x2))&(x4))^(x6))","((((x1)&(x2))&(x4))^(x7))")
-        #a.evaluate()
         a2.icompose(a1)
+        a2.evaluate()
         return a2
 
 
