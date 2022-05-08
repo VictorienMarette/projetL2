@@ -99,7 +99,6 @@ class bool_circ(bool_circ_regle_mx): # a subclass of open_digraph
             j = entier%2
             l = [j]+l
             entier = (entier-j)/2
-        print(l)
         for j in l:
             g.iparallel([bool_circ(open_digraph([], [1],[node(0,str(int(j)), {},{1:1}), node(1,"",{0:1},{})]))])
         return g                      
