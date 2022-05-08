@@ -99,10 +99,25 @@ p.display()
 p = parse_parentheses("((x0)&((x1)&(x2)))|((x1)&(~(x2)))", "((x0)&(~(x1)))|(x2)")
 p.display()
 print(p.is_well_formed())
-"""
+
 t = bool_circ.Adder(1)
 t.get_node_by_id(25).set_label("0")
 t.display(verbose=True)
-t.evaluate()
+t.evaluate()"""
+circ = bool_circ(open_digraph([0, 1, 2], [8], [node(0, 'x1', {}, {3:1}),
+                             node(1, 'x2', {}, {4:1}),
+                             node(2, 'x3', {}, {5:1}),
+                             node(3, '&', {0:1, 4:1}, {7:1}),
+                             node(4, '', {1:1}, {3:1, 5:1}),
+                             node(5, '|', {2:1, 4:1}, {6:1}),
+                             node(6, '~', {5:1}, {7:1}),
+                             node(7, '|', {3:1, 6:1}, {8:1}),
+                             node(8, 'out', {7:1}, {})]))
+circ.get_node_by_id(6).set_label("^")
+circ.get_node_by_id(5).set_label("^")
+circ.add_edge(2, 6)
+circ.display(verbose=True)
+circ.evaluate()
+circ.display()
 
     
