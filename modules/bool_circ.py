@@ -247,13 +247,16 @@ class bool_circ(bool_circ_regle_mx): # a subclass of open_digraph
     @classmethod
     def encodeur(cls):
         a = parse_parentheses("(((x1)^(x2))^(x4))","(((x1)^(x3))^(x4))","(x1)","(((x2)^(x3))^(x4))","(x2)","(x3)","(x4)")
-        a.evaluate()
+        #a.evaluate()
         return a
 
     @classmethod
     def desencodeur(cls):
-        return parse_parentheses("((x1)&(x2)&(x4))","((x1)&(x3)&(x4))","(x1)","((x2)&(x3)&(x4))","(x2)","(x3)","(x4)")
-        #(x1)^(x3)^(x5)^(x7)  (x2)^(x3)^(x6)^(x7) (x4)^(x5)^(x6)^(x7)
+        a1 = parse_parentheses("((((x1)^(x3))^(x5))^(x7))", "((((x2)^(x3))^(x6))^(x7))", "x3", "((((x4)^(x5))^(x6))^(x7))", "(x5)", "x6", "(x7)")
+        a2 = parse_parentheses("((((x1)&(x2))&(~(x4)))^(x3))", "((((x1)&(~(x2)))&(x4))^(x5))", "((((~(x1))&(x2))&(x4))^(x6))","((((x1)&(x2))&(x4))^(x7))")
+        #a.evaluate()
+        a2.icompose(a1)
+        return a2
 
 
 def parse_parentheses(*strings : str) -> bool_circ:
