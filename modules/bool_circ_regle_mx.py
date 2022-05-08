@@ -81,7 +81,7 @@ class bool_circ_regle_mx(open_digraph):
         if my_node.get_label() in ["|", "^"]:
             my_node.set_label("0")
         if my_node.get_label() == "&":
-            my_node.set_label("1") 
+            my_node.set_label("1")
 
     def regle_associativite_XOR(self, id_father, id_child):
         node_father = self.get_node_by_id(id_father)
@@ -232,4 +232,3 @@ class bool_circ_regle_mx(open_digraph):
                             print(myNode.get_id())
                             self.regle_effacement(myNode.get_parent_ids()[0], id)
                             flag = True
-                            
