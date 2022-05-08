@@ -264,7 +264,7 @@ def parse_parentheses(*strings : str) -> bool_circ:
     def sub_parse_parentheses(s : str) -> bool_circ:
         g = bool_circ(open_digraph([], [], []))
         g.add_node()
-        g.add_output_nodes('', 1)
+        g.add_output_nodes(f'o', 1)
         current_node = 1
         s2 = ''
         labelList = {} # {label : id list}

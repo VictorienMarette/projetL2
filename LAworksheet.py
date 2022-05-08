@@ -113,9 +113,7 @@ circ = bool_circ(open_digraph([0, 1, 2], [8], [node(0, 'x1', {}, {3:1}),
                              node(6, '~', {5:1}, {7:1}),
                              node(7, '|', {3:1, 6:1}, {8:1}),
                              node(8, 'out', {7:1}, {})]))
-circ.get_node_by_id(6).set_label("^")
-circ.get_node_by_id(5).set_label("^")
-circ.add_edge(2, 6)
+circ.add_node("", {0:1, 2:1, 6:1})
 circ.display(verbose=True)
 circ.evaluate()
 circ.display()
