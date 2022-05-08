@@ -99,7 +99,6 @@ class bool_circ_regle_mx(open_digraph):
         for ch in node_child.get_children_ids():
             self.add_edge(id_father, ch)
         self.remove_node_by_id(id_child)
-        self.display()
 
     def regle_involution_XOR(self, id_father, id_child):
         node_father = self.get_node_by_id(id_father)
