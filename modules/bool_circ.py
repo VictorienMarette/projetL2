@@ -20,6 +20,10 @@ class bool_circ(bool_circ_regle_mx): # a subclass of open_digraph
         super().__init__(g.inputs.copy(), g.outputs.copy(), g.nodes.values())
 
     def is_well_formed(self, printCondition = False):
+        """
+        verifie sur le graph est bien forme
+        return : boolean
+        """
 
         # Condition sur les degrees
         for theNode in self.get_nodes():
@@ -105,6 +109,10 @@ class bool_circ(bool_circ_regle_mx): # a subclass of open_digraph
 
     @classmethod
     def random(cls, n,inp = 0, outp = 0):
+        """
+        renvoi un bool_circ aleatoire
+        args : n -> 
+        """
         operateurs_unitaires = ["~"]
         operateurs_binaires = ["&", "|"]
         
@@ -259,6 +267,11 @@ class bool_circ(bool_circ_regle_mx): # a subclass of open_digraph
 
 
 def parse_parentheses(*strings : str) -> bool_circ:
+    """
+    Creer un bool_circ a partir de l expression str
+    Args : str : String
+           return : le graph correspondant
+    """
 
     def sub_parse_parentheses(s : str) -> bool_circ:
         g = bool_circ(open_digraph([], [], []))
@@ -315,6 +328,9 @@ def parse_parentheses(*strings : str) -> bool_circ:
     return g
 
 def code_de_grey(n):
+    """
+    args : n int
+    """
     if n == 1:
         return ["0","1"]
     

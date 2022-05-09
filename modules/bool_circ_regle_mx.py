@@ -82,7 +82,11 @@ class bool_circ_regle_mx(open_digraph):
             my_node.set_label("0")
         if my_node.get_label() == "&":
             my_node.set_label("1")
-
+    """
+    methode des regles de reecriture du TD12
+    En general : id_father, id_child -> int node id
+    idEntre -> int node id qui vaut 0 ou 1
+    """
     def regle_associativite_XOR(self, id_father, id_child):
         node_father = self.get_node_by_id(id_father)
         node_child = self.get_node_by_id(id_child)
@@ -158,6 +162,10 @@ class bool_circ_regle_mx(open_digraph):
 
    #co feuille = noeud qui a des enfants mais pas de parents
     def evaluate(self, display = False, verbose = False):
+        """
+        applique les regles ci dessus au graph
+        display, verbose : pour l affichage a chaque modification
+        """
         flag = True
         while flag:
             flagDisplay = False

@@ -18,3 +18,5 @@ d.icompose(r2)
 d.display()
 d.evaluate()
 d.display()
+
+# On a pas fait la derniere question car bug et examen demain a 8h, desole
