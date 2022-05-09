@@ -1,3 +1,6 @@
+from sympy import false
+
+
 class open_digraph_composition_mx:
     def max_id(self):
         """
@@ -61,7 +64,7 @@ class open_digraph_composition_mx:
         a.iparallel(l)
         return a  
 
-    def icompose(self, g):
+    def icompose(self, g, verbos=false):
         '''
         le transforme en la composee avec g
         fait f = gof
@@ -74,8 +77,8 @@ class open_digraph_composition_mx:
         self.shift_indices(b.max_id() + 1)
         
         for i in range(len(self.get_input_ids())):
-            self.get_node_by_id(self.get_node_by_id(self.get_input_ids()[i]).get_children_ids()[0]).set_parents_ids({b.get_node_by_id(b.get_output_ids()[i]).get_parent_ids()[0]:1})
-            b.get_node_by_id(b.get_node_by_id(b.get_output_ids()[i]).get_parent_ids()[0]).set_children_ids({self.get_node_by_id(self.get_input_ids()[i]).get_children_ids()[0]:1})
+            self.get_node_by_id(self.get_node_by_id(self.get_input_ids()[i]).get_children_ids()[0]).add_parent_id(b.get_node_by_id(b.get_output_ids()[i]).get_parent_ids()[0])
+            b.get_node_by_id(b.get_node_by_id(b.get_output_ids()[i]).get_parent_ids()[0]).add_child_id(self.get_node_by_id(self.get_input_ids()[i]).get_children_ids()[0])
         
         self.remove_nodes_by_id(self.get_input_ids().copy())
         b.remove_nodes_by_id(b.get_output_ids().copy())
